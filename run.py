@@ -31,6 +31,9 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         self.db = Database() # Создаём объект базы данных
         self.db.database_open()       # Открываем баз данных
 
+        if 'users' not in self.db.connection.tables(): # Если база данных не содержит таблицу 'users'
+            self.db.database_create_users_table()      # Создаём таблицу users в базе данных, если её ещё нет
+
 
 if __name__ == "__main__":
     import sys
