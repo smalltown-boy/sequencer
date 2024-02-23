@@ -24,7 +24,7 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         self.abort_button.clicked.connect(self.exit_register_window) # Задаём событие для кнопки отмены
     def exit_register_window(self): # Функция выхода из окна регистрации
         self.close()                # Закрываем окно регистрации
-        window.show()               # Открываем окно входас
+        window.show()               # Открываем окно входа
 
 
 if __name__ == "__main__":
