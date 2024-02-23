@@ -5,9 +5,15 @@ import sys
 class Database():         # Класс для работы с базами данных
     def __init__(self):   # Конструктор класса
         self.cursor = None
-        self.obj = QtWidgets.QApplication(sys.argv) # Создаём объект программы
-        self.connection = QtSql.QSqlDatabase.addDatabase('QSQLITE') # Указываем тип базы данных, с которой будем работать
-        self.connection.setDatabaseName('database/users.sqlite') # Указываем имя базы данных для открытия
+        self.obj = QtWidgets.QApplication(sys.argv)  # Создаём объект программы
+        self.connection = QtSql.QSqlDatabase.addDatabase(
+            'QSQLITE')  # Указываем тип базы данных, с которой будем работать
+        self.connection.setDatabaseName('database/users.sqlite')  # Указываем имя базы данных для открытия
+        #
+        if 'users' not in self.connection.tables():  # Если таблицы users нет в базе данных (в случае, если базы нет)
+            self.database_open() # Открываем базу данных
+            self.database_create_users_table() # Создаём необходимую нам таблицу
+            self.database_close() # Закрываем базу данных
 
     def database_open(self): # Функция открытия базы данных
         self.connection.open()
@@ -22,8 +28,8 @@ class Database():         # Класс для работы с базами да�
                          "name text, " +
                          "company text, " +
                          "post text, " +
-                         "password text)")
-        self.connection.close()
+                         "password text, " +
+                         "rights text)")
 
 
 
