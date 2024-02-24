@@ -44,12 +44,12 @@ class Database():         # Класс для работы с базами да�
         self.query.exec('INSERT INTO users (login, name, rights) VALUES ("guest", "Гость", "limited")') # Добавление записей для гостевой учётноё записи
 
     def database_search_user(self, login):
-        try:
             self.cursor = QtSql.QSqlQuery()    # Создание курсора
             self.cursor.prepare('SELECT * FROM users WHERE login=?') # Поиск строки с данными о пользователе по логину
             self.cursor.addBindValue(login)
             self.row = self.cursor.first()
-            return self.row
-        except:
-            return False
+            if self.row:
+                return self.row
+            else:
+                return False
 

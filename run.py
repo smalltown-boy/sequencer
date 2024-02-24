@@ -17,6 +17,7 @@ class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, в
             self.open_register_window)  # Соединяем кнопку регистрации пользователя с новым окном
         self.exit_button.clicked.connect(self.close_register_window)  # Соединяем кнопку выхода из программы с функцией
         self.login_button.clicked.connect(self.authentication)  # Соединяем кнопку входа с функцией аутентификации
+        self.db = Database()  # Создаём объект базы данных
 
     def open_register_window(self):  # Функция вызова окна регистрации нового пользователя
         self.close()  # Закрываем окно регистрации
@@ -32,7 +33,6 @@ class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, в
         if self.login == '' or self.password == '':  # Если логин или пароль не введены
             self.auth_empty_dialog.show()  # Вызвать диалог с ошибкой
         else:  # Если логин и пароль введены
-            self.db = Database()  # Создаём объект базы данных
             self.db.database_open()  # Открываем баз данных
             self.user = self.db.database_search_user(self.login)  # Ищем пользователя
             self.db.database_close()
@@ -81,7 +81,6 @@ class WindowAuthError(QtWidgets.QMainWindow, auth_error.Ui_auth_error_form):
 
 if __name__ == "__main__":
     import sys
-
     app = QtWidgets.QApplication(sys.argv)
     window = WindowLogin()
     window.show()
