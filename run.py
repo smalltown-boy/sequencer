@@ -4,6 +4,7 @@ import gui.register as register
 from source.database import Database
 import gui.auth_error_empty as auth_empty
 import gui.auth_error as auth_error
+import gui.guest_mode_ok as guest_mode
 
 
 class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, вызывающий окно регистрации и входа
@@ -13,11 +14,17 @@ class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, в
         self.register_dialog = WindowRegister()
         self.auth_empty_dialog = WindowAuthDataEmpty()
         self.auth_error_dialog = WindowAuthError()
+        self.guest_mode = WindowGuestMode()
         self.register_button.clicked.connect(
             self.open_register_window)  # Соединяем кнопку регистрации пользователя с новым окном
         self.exit_button.clicked.connect(self.close_register_window)  # Соединяем кнопку выхода из программы с функцией
         self.login_button.clicked.connect(self.authentication)  # Соединяем кнопку входа с функцией аутентификации
+        self.guest_button.clicked.connect(self.start_guest_mode) # Запускаем гостевой режим
         self.db = Database()  # Создаём объект базы данных
+
+    def start_guest_mode(self):
+        self.close() # Закрываем окно логина
+        self.guest_mode.show() # Выводим окно предупреждения для гостевого режима
 
     def open_register_window(self):  # Функция вызова окна регистрации нового пользователя
         self.close()  # Закрываем окно регистрации
@@ -69,7 +76,7 @@ class WindowAuthDataEmpty(QtWidgets.QMainWindow, auth_empty.Ui_auth_dialog_error
         self.close()
 
 
-class WindowAuthError(QtWidgets.QMainWindow, auth_error.Ui_auth_error_form):
+class WindowAuthError(QtWidgets.QMainWindow, auth_error.Ui_auth_error_form): # Окно ошибки аутентификации
     def __init__(self, parent=None):  # Функция инициализации
         QtWidgets.QWidget.__init__(self, parent)
         self.setupUi(self)
@@ -77,6 +84,20 @@ class WindowAuthError(QtWidgets.QMainWindow, auth_error.Ui_auth_error_form):
 
     def exit_from_message(self):  # Закрываем сообщение об ошибке
         self.close()
+
+class WindowGuestMode(QtWidgets.QMainWindow, guest_mode.Ui_guest_form): # Окно ошибки аутентификации
+    def __init__(self, parent=None):  # Функция инициализации
+        QtWidgets.QWidget.__init__(self, parent)
+        self.setupUi(self)
+        self.ok_button.clicked.connect(self.start_sequencer)  # Задаём событие для кнопки "OK"
+        self.back_button.clicked.connect(self.exit_from_message)  # Задаём событие для кнопки "Назад"
+
+    def exit_from_message(self):  # Закрываем сообщение об ошибке
+        self.close()
+        window.show() # Запускаем окно ввода логина и пароля
+
+    def start_sequencer(self):
+        pass
 
 
 if __name__ == "__main__":
