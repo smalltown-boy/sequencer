@@ -2,20 +2,30 @@ from PyQt6 import QtWidgets
 import gui.login as login
 import gui.register as register
 from source.database import Database
+import gui.auth_error_empty as auth_empty
 
 class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form): # Класс, вызывающий окно регистрации и входа
     def __init__(self,parent=None): # Функция инициализации
         QtWidgets.QWidget.__init__(self,parent)
         self.setupUi(self)
         self.register_dialog = WindowRegister()
+        self.auth_empty_dialog = WindowAuthDataEmpty()
         self.register_button.clicked.connect(self.open_register_window) # Соединяем кнопку регистрации пользователя с новым окном
         self.exit_button.clicked.connect(self.close_register_window) # Соединяем кнопку выхода из программы с функцией
+        self.login_button.clicked.connect(self.authentication) # Соединяем кнопку входа с функцией аутентификации
     def open_register_window(self): # Функция вызова окна регистрации нового пользователя
         self.close() # Закрываем окно регистрации
         self.register_dialog.show() # Показываем окно регистрации нового пользователя
 
     def close_register_window(self): # Функция выхода из программы
         self.close() # Закрываем окно регистрации
+
+    def authentication(self): # Функция аутентификации
+        self.login = self.login_line.text()
+        self.password = self.password_line.text()
+
+        if self.login == '' and self.password == '':
+            self.auth_empty_dialog.show()
 
 
 class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
@@ -31,6 +41,14 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         self.db = Database() # Создаём объект базы данных
         self.db.database_open()       # Открываем баз данных
         pass
+
+class WindowAuthDataEmpty(QtWidgets.QMainWindow, auth_empty.Ui_auth_dialog_error_form):
+    def __init__(self,parent=None): # Функция инициализации
+        QtWidgets.QWidget.__init__(self,parent)
+        self.setupUi(self)
+        self.ok_button.clicked.connect(self.exit_from_message)  # Задаём событие для кнопки "OK"
+    def exit_from_message(self): # Закрываем сообщение об ошибке
+        self.close()
 
 
 if __name__ == "__main__":
