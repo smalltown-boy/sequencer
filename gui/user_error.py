@@ -40,4 +40,4 @@ class Ui_user_error_form(object):
         _translate = QtCore.QCoreApplication.translate
         user_error_form.setWindowTitle(_translate("user_error_form", "Ошибка пользователя"))
         self.ok_button.setText(_translate("user_error_form", "OK"))
-        self.label_2.setText(_translate("user_error_form", "Пользователь с указанным именем уже существует."))
+        self.label_2.setText(_translate("user_error_form", "Пользователь с указанным логином уже существует."))
