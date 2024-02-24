@@ -1,10 +1,15 @@
+# -*- coding: utf-8 -*-
+
 from PyQt6 import QtWidgets
+from PyQt6 import QtGui
+from PyQt6 import QtCore
 import gui.login as login
 import gui.register as register
 from source.database import Database
 import gui.auth_error_empty as auth_empty
 import gui.auth_error as auth_error
 import gui.guest_mode_ok as guest_mode
+
 
 
 class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, вызывающий окно регистрации и входа
@@ -55,6 +60,22 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         self.setupUi(self)
         self.abort_button.clicked.connect(self.exit_register_window)  # Задаём событие для кнопки отмены
         self.register_button.clicked.connect(self.user_register)  # Задаём событие для кнопки регистрации
+        # Устанавливаем для окон ввода параметры валидации
+        # Для логина устанавливаем только латинские буквы, цифры и символ "_". Всего - от 3х до 15ти символов.
+        self.login_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("[A-Za-z0-9_]{3,15}"), self.login_line)
+        self.login_line.setValidator(self.login_validator)
+        # Для пароля - те же правила, но без нижнего подчёркивания
+        self.password_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("[A-Za-z0-9]{3,15}"),                                                             self.password_line)
+        self.password_line.setValidator(self.password_validator)
+        # Для имени - латинские буквы, и кириллица
+        self.name_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression(r'\w+=\p{L}+\s*'), self.name_line)
+        self.name_line.setValidator(self.name_validator)
+        # Для должности всё то же самое
+        self.post_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression(r'\w+=\p{L}+\s*'), self.post_line)
+        self.post_line.setValidator(self.post_validator)
+        # И для компании - тоже
+        self.company_validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression(r'\w+=\p{L}+\s*'), self.company_line)
+        self.company_line.setValidator(self.company_validator)
 
     def exit_register_window(self):  # Функция выхода из окна регистрации
         self.close()  # Закрываем окно регистрации
