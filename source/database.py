@@ -7,6 +7,7 @@ from PyQt6.QtSql import QSqlQuery
 class Database():         # Класс для работы с базами данных
 
     def __init__(self):   # Конструктор класса
+        self.row = None
         self.cursor = None
         self.query = None
         self.obj = QtWidgets.QApplication(sys.argv)  # Создаём объект программы
@@ -42,5 +43,13 @@ class Database():         # Класс для работы с базами да�
         self.query = QtSql.QSqlQuery()  # Создание курсора
         self.query.exec('INSERT INTO users (login, name, rights) VALUES ("guest", "Гость", "limited")') # Добавление записей для гостевой учётноё записи
 
-
+    def database_search_user(self, login):
+        try:
+            self.cursor = QtSql.QSqlQuery()    # Создание курсора
+            self.cursor.prepare('SELECT * FROM users WHERE login=?') # Поиск строки с данными о пользователе по логину
+            self.cursor.addBindValue(login)
+            self.row = self.cursor.first()
+            return self.row
+        except:
+            return False
 
