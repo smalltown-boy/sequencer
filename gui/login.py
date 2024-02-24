@@ -13,6 +13,11 @@ class Ui_login_form(object):
     def setupUi(self, login_form):
         login_form.setObjectName("login_form")
         login_form.resize(406, 245)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(login_form.sizePolicy().hasHeightForWidth())
+        login_form.setSizePolicy(sizePolicy)
         self.centralwidget = QtWidgets.QWidget(parent=login_form)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
