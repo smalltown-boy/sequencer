@@ -6,11 +6,13 @@ from PyQt6 import QtCore
 import gui.login as login
 import gui.register as register
 from source.database import Database
-import gui.auth_error_empty as auth_empty
+
 import gui.auth_error as auth_error
 import gui.guest_mode_ok as guest_mode
 import gui.register_error as register_error
 import gui.user_error as user_error
+
+from source.WindowAuthDataEmpty import WindowAuthDataEmpty
 
 
 
@@ -96,27 +98,14 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         self.right = "full"
         # Проверяем, всё ли введено (может, проверка корявая, но какая есть)
         if self.login or self.password or self.name or self.company or self.post: # Если всё введено
-            self.db = Database()  # Создаём объект базы данных
-            self.db.database_open()  # Открываем баз данных
             self.user = self.db.database_search_user(self.login)  # Смотрим, есть ли такой пользователь
             if self.login != self.user[1]:  # Если пользователи не совпадают, то надо продолжить регистрацию
                 self.reg_data = [self.login, self.name, self.company, self.post, self.password, self.right]
                 self.db.database_add_user(self.reg_data)
-                self.db.database_close()
             else:
                 self.user_error_dialog.show()  # Покажем ошибку
         else:
             self.register_error_dialog.show()  # Покажем ошибку
-
-
-class WindowAuthDataEmpty(QtWidgets.QMainWindow, auth_empty.Ui_auth_dialog_error_form):
-    def __init__(self, parent=None):  # Функция инициализации
-        QtWidgets.QWidget.__init__(self, parent)
-        self.setupUi(self)
-        self.ok_button.clicked.connect(self.exit_from_message)  # Задаём событие для кнопки "OK"
-
-    def exit_from_message(self):  # Закрываем сообщение об ошибке
-        self.close()
 
 
 class WindowAuthError(QtWidgets.QMainWindow, auth_error.Ui_auth_error_form): # Окно ошибки аутентификации

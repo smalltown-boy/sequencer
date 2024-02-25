@@ -40,25 +40,45 @@ class Database():         # Класс для работы с базами да�
                          "post text, " +
                          "password text, " +
                          "rights text)")
-        #self.connection.commit()
+        self.connection.commit()
 
     def database_create_guest_account(self): # Создание гостевой учётной записи
         self.query = QtSql.QSqlQuery()  # Создание курсора
         self.query.exec('INSERT INTO users (login, name, rights) VALUES ("guest", "Гость", "limited")') # Добавление записей для гостевой учётноё записи
 
     def database_search_user(self, login):
+            self.database_open()
+            #
             self.cursor = QtSql.QSqlQuery()    # Создание курсора
             self.cursor.prepare('SELECT * FROM users WHERE login=?') # Поиск строки с данными о пользователе по логину
             self.cursor.addBindValue(login)
             self.row = self.cursor.first()
+            #
+            self.database_close()
+            #
             if self.row:
                 return self.row
             else:
                 return False
 
     def database_add_user(self, user_data):
+        self.connection = QtSql.QSqlDatabase.addDatabase('QSQLITE')  # Указываем тип базы данных, с которой будем работать
+        self.connection.setDatabaseName('database/users.sqlite')  # Указываем имя базы данных для открытия
+        #
+        self.database_open()
+        #
         self.query = QtSql.QSqlQuery()  # Создание курсора
-        self.query.exec("INSERT INTO users (login, name, company, post, password, rights) VALUES ('{login}', '{name}', '{company}', '{post}', '{password}', '{rights}')".format(login=user_data[0], name=user_data[1], company=user_data[2], post=user_data[3], password=user_data[4], rights=user_data[5]))  # Добавление записей для гостевой учётноё записи
+        self.insert_data = 'insert into users values (?, ?, ?, ?, ?, ?)'
+        self.query.prepare(self.insert_data)
+        self.query.addBindValue(user_data[0])
+        self.query.addBindValue(user_data[1])
+        self.query.addBindValue(user_data[2])
+        self.query.addBindValue(user_data[3])
+        self.query.addBindValue(user_data[4])
+        self.query.addBindValue(user_data[5])
+        self.query.exec()
         self.connection.commit()
+        #
+        self.database_close()
 
 
