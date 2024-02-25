@@ -93,20 +93,20 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         self.name = self.name_line.text()
         self.company = self.login_line.text()
         self.post = self.post_line.text()
+        self.right = "full"
         # Проверяем, всё ли введено (может, проверка корявая, но какая есть)
-        if self.login and self.password and self.name and self.company and self.post: # Если всё введено
+        if self.login or self.password or self.name or self.company or self.post: # Если всё введено
             self.db = Database()  # Создаём объект базы данных
             self.db.database_open()  # Открываем баз данных
             self.user = self.db.database_search_user(self.login)  # Смотрим, есть ли такой пользователь
-            if self.login != self.user[1]: # Если пользователи не совпадают, то надо продолжить регистрацию
-                pass
+            if self.login != self.user[1]:  # Если пользователи не совпадают, то надо продолжить регистрацию
+                self.reg_data = [self.login, self.name, self.company, self.post, self.password, self.right]
+                self.db.database_add_user(self.reg_data)
+                self.db.database_close()
             else:
-                self.db.database_close()  # Закромем базу данных
-                self.user_error_dialog.show() # Покажем ошибку
+                self.user_error_dialog.show()  # Покажем ошибку
         else:
-            self.db.database_close()  # Закромем базу данных
-            self.register_error_dialog.show() # Покажем ошибку
-
+            self.register_error_dialog.show()  # Покажем ошибку
 
 
 class WindowAuthDataEmpty(QtWidgets.QMainWindow, auth_empty.Ui_auth_dialog_error_form):

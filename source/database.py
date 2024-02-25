@@ -15,12 +15,15 @@ class Database():         # Класс для работы с базами да�
             'QSQLITE')  # Указываем тип базы данных, с которой будем работать
         self.connection.setDatabaseName('database/users.sqlite')  # Указываем имя базы данных для открытия
         #
+        self.database_open()  # Открываем базу данных
+        #
         if 'users' not in self.connection.tables():  # Если таблицы users нет в базе данных (в случае, если базы нет)
-            self.database_open() # Открываем базу данных
+            # self.database_open() # Открываем базу данных
             self.database_create_users_table() # Создаём необходимую нам таблицу
             self.database_create_guest_account() # Создаём гостевой аккаунт для тех, кто не хочет регистрироваться
             self.connection.commit()
-            self.database_close() # Закрываем базу данных
+
+        self.database_close() # Закрываем базу данных
 
     def database_open(self): # Функция открытия базы данных
         self.connection.open()
@@ -52,4 +55,10 @@ class Database():         # Класс для работы с базами да�
                 return self.row
             else:
                 return False
+
+    def database_add_user(self, user_data):
+        self.query = QtSql.QSqlQuery()  # Создание курсора
+        self.query.exec("INSERT INTO users (login, name, company, post, password, rights) VALUES ('{login}', '{name}', '{company}', '{post}', '{password}', '{rights}')".format(login=user_data[0], name=user_data[1], company=user_data[2], post=user_data[3], password=user_data[4], rights=user_data[5]))  # Добавление записей для гостевой учётноё записи
+        self.connection.commit()
+
 
