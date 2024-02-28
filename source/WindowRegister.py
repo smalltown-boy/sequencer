@@ -46,7 +46,7 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         login = self.login_line.text()
         password = self.password_line.text()
         name = self.name_line.text()
-        company = self.login_line.text()
+        company = self.company_line.text()
         post = self.post_line.text()
         rights = "Full"
         # Открываем базу данных
