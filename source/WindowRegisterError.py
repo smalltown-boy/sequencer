@@ -2,8 +2,6 @@
 
 from PyQt6 import QtWidgets
 import gui.register_error as register_error
-
-
 class WindowRegisterError(QtWidgets.QMainWindow, register_error.Ui_reg_error_form):  # Окно ошибки аутентификации
     def __init__(self, parent=None):  # Функция инициализации
         QtWidgets.QWidget.__init__(self, parent)

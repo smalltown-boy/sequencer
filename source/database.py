@@ -1,84 +1,81 @@
-from PyQt6 import QtWidgets, QtSql
-import sys
-
-from PyQt6.QtSql import QSqlQuery
+# Импорт модуля
+import sqlite3
 
 
-class Database():         # Класс для работы с базами данных
-
-    def __init__(self):   # Конструктор класса
-        self.row = None
+# Класс для работы с базами данных
+class Database:
+    # Конструктор
+    def __init__(self):
+        self.connection = None
         self.cursor = None
-        self.query = None
-        self.obj = QtWidgets.QApplication(sys.argv)  # Создаём объект программы
-        self.connection = QtSql.QSqlDatabase.addDatabase(
-            'QSQLITE')  # Указываем тип базы данных, с которой будем работать
-        self.connection.setDatabaseName('database/users.sqlite')  # Указываем имя базы данных для открытия
-        #
-        self.database_open()  # Открываем базу данных
-        #
-        if 'users' not in self.connection.tables():  # Если таблицы users нет в базе данных (в случае, если базы нет)
-            # self.database_open() # Открываем базу данных
-            self.database_create_users_table() # Создаём необходимую нам таблицу
-            self.database_create_guest_account() # Создаём гостевой аккаунт для тех, кто не хочет регистрироваться
-            self.connection.commit()
+        self.table = None
+        self.data = None
 
-        self.database_close() # Закрываем базу данных
+    # Открытие базы данных
+    def open(self, db_name):
+        try:
+            self.connection = sqlite3.connect(db_name) # Открываем бд
+            self.cursor = self.connection.cursor()     # Сразу создаём курсор
+            return True
+        except:
+            return False
 
-    def database_open(self): # Функция открытия базы данных
-        self.connection.open()
+    # Создание таблицы users (хардкод, потом доработать)
+    def create_table_users(self):
+        self.table = """CREATE TABLE USERS(
+                        id int auto_increment primary key,
+                        login text,
+                        name text,
+                        company text,
+                        post text,
+                        password text,
+                        rights text)"""
+        self.cursor.execute(self.table)
 
-    def database_close(self): # Функция закрытия базы данных
+    # Чтение базы данных
+    def read(self, db_name):
+        self.data = self.cursor.execute('''SELECT * FROM users''')
+        return self.data
+
+    # Запись массива данных в бд
+    def add_user(self, login, name, company, post, password, rights):
+        self.cursor.execute("insert into users (login, name, company, post, password, rights) values (?, ?, ?, ?, ?, ?)",(login, name, company, post, password, rights))
+       
+    # Подверждение изменений
+    def commit(self):
+        self.connection.commit()
+
+    # Закрытие базы данных
+    def close(self):
         self.connection.close()
 
-    def database_create_users_table(self): # Создание таблицы пользователей
-        self.cursor = QtSql.QSqlQuery()    # Создание курсора
-        self.cursor.exec("create table users (user_id integer primary key autoincrement, " +
-                         "login text, " +
-                         "name text, " +
-                         "company text, " +
-                         "post text, " +
-                         "password text, " +
-                         "rights text)")
-        self.connection.commit()
+    # Проверка таблицы на присутствие в базе данных
+    def check_table(self, table_name):
+        self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        self.result = self.cursor.fetchone()
 
-    def database_create_guest_account(self): # Создание гостевой учётной записи
-        self.query = QtSql.QSqlQuery()  # Создание курсора
-        self.query.exec('INSERT INTO users (login, name, rights) VALUES ("guest", "Гость", "limited")') # Добавление записей для гостевой учётноё записи
+        if self.result:
+            return True
+        else:
+            return False
 
-    def database_search_user(self, login):
-            self.database_open()
-            #
-            self.cursor = QtSql.QSqlQuery()    # Создание курсора
-            self.cursor.prepare('SELECT * FROM users WHERE login=?') # Поиск строки с данными о пользователе по логину
-            self.cursor.addBindValue(login)
-            self.row = self.cursor.first()
-            #
-            self.database_close()
-            #
-            if self.row:
-                return self.row
-            else:
-                return False
+    # Поиск пользователя по имени или id
+    def search_user(self, column, value, table):
+        self.cursor.execute(f"SELECT * FROM {table} WHERE {column}= (?)",(value,))
+        self.data = self.cursor.fetchall()
+        return self.data
 
-    def database_add_user(self, user_data):
-        self.connection = QtSql.QSqlDatabase.addDatabase('QSQLITE')  # Указываем тип базы данных, с которой будем работать
-        self.connection.setDatabaseName('database/users.sqlite')  # Указываем имя базы данных для открытия
-        #
-        self.database_open()
-        #
-        self.query = QtSql.QSqlQuery()  # Создание курсора
-        self.insert_data = 'insert into users values (?, ?, ?, ?, ?, ?)'
-        self.query.prepare(self.insert_data)
-        self.query.addBindValue(user_data[0])
-        self.query.addBindValue(user_data[1])
-        self.query.addBindValue(user_data[2])
-        self.query.addBindValue(user_data[3])
-        self.query.addBindValue(user_data[4])
-        self.query.addBindValue(user_data[5])
-        self.query.exec()
-        self.connection.commit()
-        #
-        self.database_close()
+    
 
-
+if __name__ == "__main__":
+    db = Database()
+    db.open('new_database.db')
+    result = db.check_table('USERS')
+    if result:
+        #db.add_user('Sasha','spacecow','ME','Programmer','Root','Full')
+        #db.commit()
+        #db.close()
+        user = db.search_user('login', 'Sasha', 'USERS')
+        print(user)
+    else:
+        db.create_table_users()
