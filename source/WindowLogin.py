@@ -44,7 +44,7 @@ class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, в
             self.auth_empty_dialog.show()  # Вызвать диалог с ошибкой
         else:  # Если логин и пароль введены
             self.db.open('database/users.db')  # Открываем базу данных
-            self.user = self.db.search_user('login', self.login, 'users')  # Ищем пользователя в поле 'login' таблицы 'users'
+            self.user = self.db.search_user('login', self.login, 'USERS')  # Ищем пользователя в поле 'login' таблицы 'users'
             self.db.close() # Закрываем базу данных
             if self.user:  # Если пользователь найден
                 pass # Проверка пароля и вход в ПО

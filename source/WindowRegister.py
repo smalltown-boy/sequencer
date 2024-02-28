@@ -8,6 +8,8 @@ import gui.register as register
 from source.WindowUserError import WindowUserError
 from source.WindowRegisterError import WindowRegisterError
 
+from source.database import Database
+
 class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
@@ -41,18 +43,21 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
 
     def user_register(self):  # Функция регистрации нового пользователя
         # Получаем пользователем регистрационные данные
-        self.login = self.login_line.text()
-        self.password = self.password_line.text()
-        self.name = self.name_line.text()
-        self.company = self.login_line.text()
-        self.post = self.post_line.text()
-        self.right = "full"
+        login = self.login_line.text()
+        password = self.password_line.text()
+        name = self.name_line.text()
+        company = self.login_line.text()
+        post = self.post_line.text()
+        rights = "full"
+        # Открываем базу данных
+        db = Database()
         # Проверяем, всё ли введено (может, проверка корявая, но какая есть)
-        if self.login or self.password or self.name or self.company or self.post: # Если всё введено
-            self.user = self.db.database_search_user(self.login)  # Смотрим, есть ли такой пользователь
-            if self.login != self.user[1]:  # Если пользователи не совпадают, то надо продолжить регистрацию
-                self.reg_data = [self.login, self.name, self.company, self.post, self.password, self.right]
-                self.db.database_add_user(self.reg_data)
+        if login or password or name or company or post: # Если всё введено
+            user = db.search_user('login', 'Sasha', 'USERS')  # Смотрим, есть ли такой пользователь
+            if login != user[1]:  # Если пользователи не совпадают, то надо продолжить регистрацию
+                db.add_user(login, name, company, post, password, rights) # Записываем пользователя в базу данных
+                db.commit() # Сохраняем изменения
+                db.close() # Закрываем базу данных (или оставить её открытой до закрытия программы?)
             else:
                 self.user_error_dialog.show()  # Покажем ошибку
         else:
