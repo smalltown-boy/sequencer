@@ -52,7 +52,7 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         # Открываем базу данных
         db = Database()
         db.open('database/users.db')
-        if login is None and password is None:
+        if login == '' and password == '':
             self.register_error_dialog.show()  # Покажем ошибку
         # Проверяем, всё ли введено (может, проверка корявая, но какая есть)
         else:
