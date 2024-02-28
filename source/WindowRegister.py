@@ -48,17 +48,18 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         name = self.name_line.text()
         company = self.login_line.text()
         post = self.post_line.text()
-        rights = "full"
+        rights = "Full"
         # Открываем базу данных
         db = Database()
-        # Проверяем, всё ли введено (может, проверка корявая, но какая есть)
-        if login or password or name or company or post: # Если всё введено
-            user = db.search_user('login', 'Sasha', 'USERS')  # Смотрим, есть ли такой пользователь
-            if login != user[1]:  # Если пользователи не совпадают, то надо продолжить регистрацию
-                db.add_user(login, name, company, post, password, rights) # Записываем пользователя в базу данных
-                db.commit() # Сохраняем изменения
-                db.close() # Закрываем базу данных (или оставить её открытой до закрытия программы?)
-            else:
-                self.user_error_dialog.show()  # Покажем ошибку
-        else:
+        db.open('database/users.db')
+        if login is None and password is None:
             self.register_error_dialog.show()  # Покажем ошибку
+        # Проверяем, всё ли введено (может, проверка корявая, но какая есть)
+        else:
+            user = db.search_user('login', 'Sasha', 'USERS')  # Смотрим, есть ли такой пользователь
+            if user: # Если пользователь найден
+                self.user_error_dialog.show()  # Покажем ошибку
+            else: # В противном случае зарегистрируем пользователя
+                db.add_user(login, name, company, post, password, rights)  # Записываем пользователя в базу данных
+                db.commit()  # Сохраняем изменения
+        db.close()  # Закрываем базу данных (или оставить её открытой до закрытия программы?)
