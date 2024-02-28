@@ -11,6 +11,15 @@ class Database:
         self.table = None
         self.data = None
 
+        # Инициализация базы данных в конструкторе класса
+        self.open('database/users.db') # Открываем базу данных
+        result = self.check_table('users') # Проверяем наличие таблицы 'users'
+        if not result: # Если таблицы не существует
+            self.create_table_users() # Создаём таблицу 'users' (продумать эту функцию)
+            self.add_user('Guest', 'Гость', 'Нет', 'Нет', 'Нет', 'Limit')
+            self.commit() # Сохраняем изменения
+        self.close() # Закрываем базу данных
+
     # Открытие базы данных
     def open(self, db_name):
         try:
@@ -23,7 +32,7 @@ class Database:
     # Создание таблицы users (хардкод, потом доработать)
     def create_table_users(self):
         self.table = """CREATE TABLE USERS(
-                        id int auto_increment primary key,
+                        user_id integer primary key autoincrement,
                         login text,
                         name text,
                         company text,
