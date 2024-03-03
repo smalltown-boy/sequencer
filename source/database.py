@@ -74,7 +74,8 @@ class Database:
     # Поиск пользователя по имени или id
     def search_user(self, column, value, table):
         self.cursor.execute(f"SELECT * FROM {table} WHERE {column}= (?)",(value,))
-        self.data = self.cursor.fetchall()
-        return self.data
+        self.data = self.cursor.fetchone()
+        return dict(zip([description[0] for description in self.cursor.description], self.data))
+        #return self.data
 
 
