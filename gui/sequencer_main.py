@@ -12,11 +12,11 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Sequencer(object):
     def setupUi(self, Sequencer):
         Sequencer.setObjectName("Sequencer")
-        Sequencer.resize(1222, 801)
+        Sequencer.resize(1222, 714)
         self.centralwidget = QtWidgets.QWidget(parent=Sequencer)
         self.centralwidget.setObjectName("centralwidget")
         self.log_box = QtWidgets.QGroupBox(parent=self.centralwidget)
-        self.log_box.setGeometry(QtCore.QRect(10, 559, 1201, 171))
+        self.log_box.setGeometry(QtCore.QRect(10, 559, 1201, 181))
         font = QtGui.QFont()
         font.setPointSize(8)
         self.log_box.setFont(font)
@@ -27,7 +27,7 @@ class Ui_Sequencer(object):
         self.log_browser.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.log_browser.setObjectName("log_browser")
         self.control_box = QtWidgets.QGroupBox(parent=self.centralwidget)
-        self.control_box.setGeometry(QtCore.QRect(10, 10, 1201, 541))
+        self.control_box.setGeometry(QtCore.QRect(10, 10, 1241, 571))
         self.control_box.setObjectName("control_box")
         self.btn_start_test = QtWidgets.QPushButton(parent=self.control_box)
         self.btn_start_test.setGeometry(QtCore.QRect(450, 280, 161, 28))

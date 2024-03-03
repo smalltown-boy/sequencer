@@ -7,12 +7,11 @@ class WindowGuestMode(QtWidgets.QMainWindow, guest_mode.Ui_guest_form):  # Ок�
     def __init__(self, parent=None):  # Функция инициализации
         QtWidgets.QWidget.__init__(self, parent)
         self.setupUi(self)
-        self.ok_button.clicked.connect(self.start_sequencer)  # Задаём событие для кнопки "OK"
-        self.back_button.clicked.connect(self.exit_from_message)  # Задаём событие для кнопки "Назад"
+        self.ok_button.clicked.connect(self.exit_from_message)  # Задаём событие для кнопки "OK"
 
     def exit_from_message(self):  # Закрываем сообщение об ошибке
         self.close()
-        window.show()  # Запускаем окно ввода логина и пароля
+        # Придумать, как вернуться к окну регистрации
 
     def start_sequencer(self):
         pass

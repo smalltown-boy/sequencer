@@ -30,7 +30,14 @@ class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, в
         self.db = Database()  # Создаём объект базы данных
 
     def start_guest_mode(self):
+        # Выполняем вход гостевым пользователем
+        self.db.open('database/users.db')  # Открываем базу данных
+        self.user = self.db.search_user('login', 'Guest', 'USERS')  # Ищем пользователя в поле 'login' таблицы 'users'
+        self.db.close()  # Закрываем базу данных
         self.close() # Закрываем окно логина
+        # Открываем окно секвенсора и окно предупреждения
+        self.sequencer_dialog.show() # Показываем главное окно
+        self.sequencer_dialog.register_user_data(self.user) # Передаём данные о госте в основное окно
         self.guest_mode_dialog.show() # Выводим окно предупреждения для гостевого режима
 
     def open_register_window(self):  # Функция вызова окна регистрации нового пользователя
@@ -55,6 +62,7 @@ class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, в
                 if password == self.user["password"]:
                     self.close()
                     self.sequencer_dialog.show() # Запускаем рабочее окно программы
+                    self.sequencer_dialog.register_user_data(self.user) # Передаём в главный класс данные о пользователе
                 else:
                     self.auth_error_dialog.show()
             else:  # Если записи о таком пользователе нет
