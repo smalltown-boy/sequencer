@@ -10,4 +10,9 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
         self.user_data = None
 
     def register_user_data(self, user_data): # Сохраняем данные о пользователе
-        self.user_data = user_data
+        self.user_data = user_data # Получаем данные пользователя
+        if self.user_data["rights"] == 'Limit': # Если права пользователя ограничены
+            # Делаем кнопки создания карточки прибора и протокола недоступными
+            self.btn_create_card.setEnabled(False)
+            self.btn_create_protocol.setEnabled(False)
+
