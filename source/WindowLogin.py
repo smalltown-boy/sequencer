@@ -3,17 +3,19 @@
 from PyQt6 import QtWidgets
 
 import gui.login as login
+import gui.guest_mode_ok as guest_mode
 
 from source.WindowRegister import WindowRegister
 from source.WindowAuthDataEmpty import WindowAuthDataEmpty
 from source.WindowsAuthError import WindowAuthError
-from source.WindowGuestMode import WindowGuestMode
+#from source.WindowGuestMode import WindowGuestMode
 from source.database import Database
 
 class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, вызывающий окно регистрации и входа
     def __init__(self, parent=None):  # Функция инициализации
         QtWidgets.QWidget.__init__(self, parent)
         self.setupUi(self)
+        # Создаём объекты классов, которы будем вызывать
         self.register_dialog = WindowRegister()
         self.auth_empty_dialog = WindowAuthDataEmpty()
         self.auth_error_dialog = WindowAuthError()
@@ -50,3 +52,18 @@ class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, в
                 pass # Проверка пароля и вход в ПО
             else:  # Если записи о таком пользователе нет
                 self.auth_error_dialog.show()
+
+class WindowGuestMode(QtWidgets.QMainWindow, guest_mode.Ui_guest_form):  # Окно ошибки аутентификации
+    def __init__(self, parent=None):  # Функция инициализации
+        QtWidgets.QWidget.__init__(self, parent)
+        self.setupUi(self)
+        self.ok_button.clicked.connect(self.start_sequencer)  # Задаём событие для кнопки "OK"
+        self.back_button.clicked.connect(self.exit_from_message)  # Задаём событие для кнопки "Назад"
+        self.window = WindowLogin()
+
+    def exit_from_message(self):  # Закрываем сообщение об ошибке
+        self.close()
+        self.window.show()  # Запускаем окно ввода логина и пароля
+
+    def start_sequencer(self):
+        pass

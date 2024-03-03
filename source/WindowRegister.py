@@ -39,7 +39,6 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
     def exit_register_window(self):  # Функция выхода из окна регистрации
         self.close()  # Закрываем окно регистрации
         #window.show()  # Открываем окно входа
-        Window.show()
 
     def user_register(self):  # Функция регистрации нового пользователя
         # Получаем пользователем регистрационные данные
