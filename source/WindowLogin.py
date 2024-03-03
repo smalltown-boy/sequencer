@@ -50,8 +50,12 @@ class WindowLogin(QtWidgets.QMainWindow, login.Ui_login_form):  # Класс, в
             self.db.open('database/users.db')  # Открываем базу данных
             self.user = self.db.search_user('login', login, 'USERS')  # Ищем пользователя в поле 'login' таблицы 'users'
             self.db.close() # Закрываем базу данных
-            print(self.user)
             if self.user:  # Если пользователь найден
-                self.sequencer_dialog.show() # Запускаем рабочее окно программы
+                # Примитивная проверка пароля на совпадение
+                if password == self.user["password"]:
+                    self.close()
+                    self.sequencer_dialog.show() # Запускаем рабочее окно программы
+                else:
+                    self.auth_error_dialog.show()
             else:  # Если записи о таком пользователе нет
                 self.auth_error_dialog.show()
