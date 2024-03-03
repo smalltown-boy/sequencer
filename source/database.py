@@ -14,13 +14,22 @@ class Database:
         # Инициализация базы данных в конструкторе класса
         self.open('database/users.db') # Открываем базу данных
         result = self.check_table('users') # Проверяем наличие таблицы 'users'
-        #print(result)
-        if result: # Если таблицы не существует
+
+        if result: # Если таблица существует
             pass
         else:
             self.create_table_users()  # Создаём таблицу 'users' (продумать эту функцию)
             self.add_user('Guest', 'Гость', 'Нет', 'Нет', 'Нет', 'Limit')
             self.commit()  # Сохраняем изменения
+
+        result = self.check_table('devices')  # Проверяем наличие таблицы 'devices' (для хранения информации о устройствах)
+
+        if result:
+            pass
+        else:
+            self.create_table_devices()
+            self.commit()
+
         self.close() # Закрываем базу данных
 
     # Открытие базы данных
@@ -80,4 +89,11 @@ class Database:
         except:
             return False
 
-
+    def create_table_devices(self):
+        self.table = """CREATE TABLE devices(
+                      device_id integer primary key autoincrement,
+                      author_id integer,
+                      device_name text,
+                      description text,
+                      device_card blob)"""
+        self.cursor.execute(self.table)
