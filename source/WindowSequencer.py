@@ -8,11 +8,26 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
         QtWidgets.QWidget.__init__(self, parent)
         self.setupUi(self)
         self.user_data = None
+        # Инициализируем кнопки
+        self.menu_redactor.triggered.connect(self.open_redactor) # Кнопка открытия редактора
+        self.menu_settings.triggered.connect(self.open_settings) # Кнопка открытия настроек
+        self.menu_search.triggered.connect(self.open_search) # Кнопка открытия поиска
 
     def register_user_data(self, user_data): # Сохраняем данные о пользователе
         self.user_data = user_data # Получаем данные пользователя
         if self.user_data["rights"] == 'Limit': # Если права пользователя ограничены
-            # Делаем кнопки создания карточки прибора и протокола недоступными
-            self.btn_create_card.setEnabled(False)
-            self.btn_create_protocol.setEnabled(False)
+            # Делаем кнопку редактора недоступной
+            self.menu_redactor.setEnabled(False)
+
+    def open_redactor(self):
+        print("Создаём протокол.")
+        pass
+
+    def open_settings(self):
+        print("Открываем настройки.")
+        pass
+
+    def open_search(self):
+        print("Открываем поиск.")
+        pass
 

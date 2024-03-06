@@ -94,6 +94,9 @@ class Database:
                       device_id integer primary key autoincrement,
                       author_id integer,
                       device_name text,
+                      serial_number integer,
+                      engineer text,
+                      programmer text,
                       description text,
                       device_card blob)"""
         self.cursor.execute(self.table)
