@@ -3,10 +3,12 @@
 from PyQt6 import QtWidgets
 from PyQt6 import QtGui
 from PyQt6 import QtCore
+from PyQt6.QtWidgets import QMessageBox
 import gui.register as register
 
 from source.WindowUserError import WindowUserError
 from source.WindowRegisterError import WindowRegisterError
+from source.WindowSequencer import WindowMain
 
 from source.database import Database
 
@@ -35,6 +37,8 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
         # Создаём объект окна ошибки
         self.register_error_dialog = WindowRegisterError()
         self.user_error_dialog = WindowUserError()
+        # Создаём объект окна секвенсора
+        self.sequencer_dialog = WindowMain()
 
     def exit_register_window(self):  # Функция выхода из окна регистрации
         self.close()  # Закрываем окно регистрации
@@ -62,4 +66,11 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
             else: # В противном случае зарегистрируем пользователя
                 db.add_user(login, name, company, post, password, rights)  # Записываем пользователя в базу данных
                 db.commit()  # Сохраняем изменения
+                self.close() # Закрываем окно регистрации
+                self.sequencer_dialog.show() # Вызываем окно секвенсора
+                # Это костыль. Мы ищем в базе только что созданного пользователя
+                user = db.search_user('login', login, 'USERS')
+                # И передаём в секвенсор данные о нём
+                self.sequencer_dialog.register_user_data(user)
+
         db.close()  # Закрываем базу данных (или оставить её открытой до закрытия программы?)

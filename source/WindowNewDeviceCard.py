@@ -30,8 +30,8 @@ class WindowCreateCard(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  #
             pass # Показать ошибку (здесь пока заглушка)
         else: # В противном случае
             s_number = db.search_device('serial_number', serial_number, 'devices')  # Смотрим, есть прибор с такийм серийным номером
-            if s_number:
-                pass # Если прибор с таким серийным номером найден, показать ошибку
-            else:
-                pass # В противном случае необходимо всё записать
+            if s_number: # Если прибор с таким серийным номером найден, показать ошибку
+                pass
+            else: # В противном случае необходимо всё записать
+                pass
         db.close()

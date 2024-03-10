@@ -65,6 +65,13 @@ class Database:
             "insert into users (login, name, company, post, password, rights) values (?, ?, ?, ?, ?, ?)",
             (login, name, company, post, password, rights))
 
+    def add_device(self, card_author_id, dev_name, s_number, engineer, programmer, hardware_ver, software_ver,
+                   description):
+        self.cursor.execute(
+            "insert into users (author_id, device_name, serial_number, engineer, programmer, hardware_ver, "
+            "firmware_ver, desription) values (?, ?, ?, ?, ?, ?)",
+            (card_author_id, dev_name, s_number, engineer, programmer, hardware_ver, software_ver, description))
+
     # Подверждение изменений
     def commit(self):
         self.connection.commit()
