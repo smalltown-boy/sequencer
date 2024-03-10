@@ -1,7 +1,8 @@
 from PyQt6 import QtWidgets
 
 import gui.sequencer_main as main_window
-from source.WindowRedactor import WindowRedactor
+#from source.WindowRedactor import WindowRedactor
+from source.WindowRedactorNew import WindowRedactor
 
 class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
     def __init__(self, parent=None):  # Функция инициализации
@@ -22,9 +23,8 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
             self.menu_redactor.setEnabled(False)
 
     def open_redactor(self): # Кнопка открытия редактора
-        self.redactor.show() # Вызываем окно редактора
+        self.redactor.exec()
         self.redactor.register_user_data(self.user_data) # Передаём данные о пользователе в окно редактора
-        pass
 
     def open_settings(self):
         print("Открываем настройки.")

@@ -1,8 +1,9 @@
 from PyQt6 import QtWidgets
 
-import gui.redactor as device_redactor
+import gui.redactor_new as redactor
 
-class WindowRedactor(QtWidgets.QMainWindow, device_redactor.Ui_Redactor):  # Окно редактора
+
+class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окно редактора
     def __init__(self, parent=None):  # Функция инициализации
         QtWidgets.QWidget.__init__(self, parent)
         self.setupUi(self)
@@ -11,4 +12,3 @@ class WindowRedactor(QtWidgets.QMainWindow, device_redactor.Ui_Redactor):  # О�
 
     def register_user_data(self, user_data):  # Сохраняем данные о пользователе
         self.user_data = user_data  # Получаем данные пользователя (для заполнения части БД)
-
