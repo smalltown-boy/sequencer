@@ -56,7 +56,7 @@ class WindowRegister(QtWidgets.QMainWindow, register.Ui_register_form):
             self.register_error_dialog.show()  # Покажем ошибку
         # Проверяем, всё ли введено (может, проверка корявая, но какая есть)
         else:
-            user = db.search_user('login', 'Sasha', 'USERS')  # Смотрим, есть ли такой пользователь
+            user = db.search_user('login', login, 'USERS')  # Смотрим, есть ли такой пользователь
             if user: # Если пользователь найден
                 self.user_error_dialog.show()  # Покажем ошибку
             else: # В противном случае зарегистрируем пользователя

@@ -12,17 +12,18 @@ class Database:
         self.data = None
 
         # Инициализация базы данных в конструкторе класса
-        self.open('database/users.db') # Открываем базу данных
-        result = self.check_table('users') # Проверяем наличие таблицы 'users'
+        self.open('database/users.db')  # Открываем базу данных
+        result = self.check_table('users')  # Проверяем наличие таблицы 'users'
 
-        if result: # Если таблица существует
+        if result:  # Если таблица существует
             pass
         else:
             self.create_table_users()  # Создаём таблицу 'users' (продумать эту функцию)
             self.add_user('Guest', 'Гость', 'Нет', 'Нет', 'Нет', 'Limit')
             self.commit()  # Сохраняем изменения
 
-        result = self.check_table('devices')  # Проверяем наличие таблицы 'devices' (для хранения информации о устройствах)
+        result = self.check_table(
+            'devices')  # Проверяем наличие таблицы 'devices' (для хранения информации о устройствах)
 
         if result:
             pass
@@ -30,13 +31,13 @@ class Database:
             self.create_table_devices()
             self.commit()
 
-        self.close() # Закрываем базу данных
+        self.close()  # Закрываем базу данных
 
     # Открытие базы данных
     def open(self, db_name):
         try:
-            self.connection = sqlite3.connect(db_name) # Открываем бд
-            self.cursor = self.connection.cursor()     # Сразу создаём курсор
+            self.connection = sqlite3.connect(db_name)  # Открываем бд
+            self.cursor = self.connection.cursor()  # Сразу создаём курсор
             return True
         except:
             return False
@@ -60,8 +61,10 @@ class Database:
 
     # Запись массива данных в бд
     def add_user(self, login, name, company, post, password, rights):
-        self.cursor.execute("insert into users (login, name, company, post, password, rights) values (?, ?, ?, ?, ?, ?)",(login, name, company, post, password, rights))
-       
+        self.cursor.execute(
+            "insert into users (login, name, company, post, password, rights) values (?, ?, ?, ?, ?, ?)",
+            (login, name, company, post, password, rights))
+
     # Подверждение изменений
     def commit(self):
         self.connection.commit()
@@ -83,7 +86,15 @@ class Database:
     # Поиск пользователя по имени или id
     def search_user(self, column, value, table):
         try:
-            self.cursor.execute(f"SELECT * FROM {table} WHERE {column}= (?)",(value,))
+            self.cursor.execute(f"SELECT * FROM {table} WHERE {column}= (?)", (value,))
+            self.data = self.cursor.fetchone()
+            return dict(zip([description[0] for description in self.cursor.description], self.data))
+        except:
+            return False
+
+    def search_device(self, column, value, table):
+        try:
+            self.cursor.execute(f"SELECT * FROM {table} WHERE {column}= (?)", (value,))
             self.data = self.cursor.fetchone()
             return dict(zip([description[0] for description in self.cursor.description], self.data))
         except:
