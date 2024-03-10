@@ -33,5 +33,10 @@ class WindowCreateCard(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  #
             if s_number: # Если прибор с таким серийным номером найден, показать ошибку
                 pass
             else: # В противном случае необходимо всё записать
-                pass
+                db.add_device(self.user_data[0],device_name,serial_number,engineer_name,
+                              programmer_name,hardware_version,software_version,description)
+                db.commit() # Сохраняем изменения
         db.close()
+
+    def register_user_data(self, user_data):  # Сохраняем данные о пользователе
+        self.user_data = user_data  # Получаем данные пользователя
