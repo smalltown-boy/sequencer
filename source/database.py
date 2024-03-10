@@ -97,6 +97,9 @@ class Database:
                       serial_number integer,
                       engineer text,
                       programmer text,
+                      hardware_ver text,
+                      firmware_ver text,
                       description text,
-                      device_card blob)"""
+                      net_settings blob,
+                      protocol blob)"""
         self.cursor.execute(self.table)
