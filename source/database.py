@@ -51,7 +51,22 @@ class Database:
                         company text,
                         post text,
                         password text,
-                        rights text)"""
+                        rights text);"""
+        self.cursor.execute(self.table)
+
+    def create_table_devices(self):
+        self.table = """CREATE TABLE devices(
+                      device_id integer primary key autoincrement,
+                      author_id integer,
+                      device_name text,
+                      serial_number integer,
+                      engineer text,
+                      programmer text,
+                      hardware_ver text,
+                      firmware_ver text,
+                      description text,
+                      net_settings blob,
+                      protocol blob);"""
         self.cursor.execute(self.table)
 
     # Чтение базы данных
@@ -65,12 +80,15 @@ class Database:
             "insert into users (login, name, company, post, password, rights) values (?, ?, ?, ?, ?, ?)",
             (login, name, company, post, password, rights))
 
-    def add_device(self, card_author_id, dev_name, s_number, engineer, programmer, hardware_ver, software_ver,
+    def add_device(self, author_id, device_name, serial_number, engineer, programmer, hardware_ver, software_ver,
                    description):
-        self.cursor.execute(
-            "insert into users (author_id, device_name, serial_number, engineer, programmer, hardware_ver, "
-            "firmware_ver, desription) values (?, ?, ?, ?, ?, ?)",
-            (card_author_id, dev_name, s_number, engineer, programmer, hardware_ver, software_ver, description))
+        try:
+            data = (author_id, device_name, serial_number, engineer, programmer, hardware_ver, software_ver, description)
+            sqlite_param = """insert into devices (author_id, device_name, serial_number, engineer, programmer, 
+            hardware_ver, firmware_ver, description) values (?, ?, ?, ?, ?, ?, ?, ?);"""
+            self.cursor.execute(sqlite_param, data)
+        except sqlite3.Error as error:
+            print("Что-то произошло", error)
 
     # Подверждение изменений
     def commit(self):
@@ -107,17 +125,4 @@ class Database:
         except:
             return False
 
-    def create_table_devices(self):
-        self.table = """CREATE TABLE devices(
-                      device_id integer primary key autoincrement,
-                      author_id integer,
-                      device_name text,
-                      serial_number integer,
-                      engineer text,
-                      programmer text,
-                      hardware_ver text,
-                      firmware_ver text,
-                      description text,
-                      net_settings blob,
-                      protocol blob)"""
-        self.cursor.execute(self.table)
+
