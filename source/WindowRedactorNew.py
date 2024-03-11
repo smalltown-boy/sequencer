@@ -9,6 +9,8 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         QtWidgets.QWidget.__init__(self, parent)
         self.setupUi(self)
         self.user_data = None
+        # Настраиваем таблицу
+        self.tableWidget.setHorizontalHeaderLabels(["Название прибора", "Серийный номер", "Автор карточки"])
         # Инициализируем фомы
         self.create_card = WindowCreateCard()
         # Инициализируем кнопки
@@ -20,3 +22,5 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
     def create_new_card(self): # Вызов формы создания новой карты
         self.create_card.show() # Вызываем форму создания карточки прибора
         self.create_card.register_user_data(self.user_data) # Передаём данные о пользователе в форму регистрации нового прибора
+
+    
