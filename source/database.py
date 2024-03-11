@@ -58,6 +58,7 @@ class Database:
         self.table = """CREATE TABLE devices(
                       device_id integer primary key autoincrement,
                       author_id integer,
+                      author_name text,
                       device_name text,
                       serial_number integer,
                       engineer text,
@@ -80,12 +81,12 @@ class Database:
             "insert into users (login, name, company, post, password, rights) values (?, ?, ?, ?, ?, ?)",
             (login, name, company, post, password, rights))
 
-    def add_device(self, author_id, device_name, serial_number, engineer, programmer, hardware_ver, software_ver,
+    def add_device(self, author_id, author_name, device_name, serial_number, engineer, programmer, hardware_ver, software_ver,
                    description):
         try:
-            data = (author_id, device_name, serial_number, engineer, programmer, hardware_ver, software_ver, description)
-            sqlite_param = """insert into devices (author_id, device_name, serial_number, engineer, programmer, 
-            hardware_ver, firmware_ver, description) values (?, ?, ?, ?, ?, ?, ?, ?);"""
+            data = (author_id, author_name, device_name, serial_number, engineer, programmer, hardware_ver, software_ver, description)
+            sqlite_param = """insert into devices (author_id, author_name, device_name, serial_number, engineer, programmer, 
+            hardware_ver, firmware_ver, description) values (?, ?, ?, ?, ?, ?, ?, ?, ?);"""
             self.cursor.execute(sqlite_param, data)
         except sqlite3.Error as error:
             print("Что-то произошло", error)

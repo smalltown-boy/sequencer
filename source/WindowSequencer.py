@@ -23,7 +23,7 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
             self.menu_redactor.setEnabled(False)
 
     def open_redactor(self):  # Кнопка открытия редактора
-        self.redactor.exec()
+        self.redactor.show()
         self.redactor.register_user_data(self.user_data)  # Передаём данные о пользователе в окно редактора
 
     def open_settings(self):

@@ -18,6 +18,7 @@ class WindowCreateCard(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  #
         self.close()
 
     def save_card(self):
+        print(self.user_data)
         device_name = self.line_name.text()  # Сохраняем имя прибора
         serial_number = self.line_serial_num.text()  # Сохраняем серийный номер
         engineer_name = self.line_engineer.text()  # Сохраняем имя инженера
@@ -25,7 +26,6 @@ class WindowCreateCard(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  #
         hardware_version = self.line_hardware_ver.text()  # Сохраняем версию железа
         software_version = self.line_software_ver.text()  # Сохраняем версию прошивки
         description = self.plain_description.toPlainText()  # Сохраняем краткое описание прибора
-        #description = "suck"
 
         db = Database()
         db.open('database/users.db')
@@ -38,10 +38,8 @@ class WindowCreateCard(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  #
                 pass
             else:  # В противном случае зарегистрируем пользователя
                 print("Пишем в базу данных.")
-                db.add_device("X", device_name, serial_number, engineer_name, programmer_name,
+                db.add_device(self.user_data["user_id"], self.user_data["name"], device_name, serial_number, engineer_name, programmer_name,
                               hardware_version, software_version, description)
-                #db.add_device("1", "1", "1", "1", "1",
-                #              "1", "1", "1")
                 db.commit()  # Сохраняем изменения
                 self.close()
         db.close()
