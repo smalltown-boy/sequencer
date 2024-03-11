@@ -126,4 +126,9 @@ class Database:
         except:
             return False
 
+    def read_all_data(self, table):
+        self.cursor.execute(f"SELECT * from {table}")
+        data = self.cursor.fetchall()
+        return data
+
 
