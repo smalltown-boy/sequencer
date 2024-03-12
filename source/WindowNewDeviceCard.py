@@ -34,7 +34,7 @@ class WindowCreateCard(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  #
         else:
             device = db.search_device('devices', device_name, serial_number)
             if device:
-                pass
+                pass # Здесь нужно вывести окно с ошибкой
             else:
                 db.add_device(self.user_data["user_id"], self.user_data["name"], device_name, serial_number,
                               engineer_name, programmer_name,

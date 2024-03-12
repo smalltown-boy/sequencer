@@ -12,6 +12,7 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.setupUi(self)
         self.user_data = None
         self.database_data = None
+        self.device_data = None
         # Настраиваем таблицу
         self.tableWidget.setHorizontalHeaderLabels(
             ["ID прибора", "Название прибора", "Серийный номер", "Автор карточки"])
@@ -37,14 +38,13 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
 
     def select_row(self):
         selected_row = self.tableWidget.currentRow()
-        print(selected_row)
         try:
             selected_data = {}
             for column in range(self.tableWidget.columnCount()):
                 item = self.tableWidget.item(selected_row, column)
                 selected_data[self.tableWidget.horizontalHeaderItem(column).text()] = item.text()
 
-            print(selected_data)
+            self.device_data = selected_data
         except:
             print("Data empty")
 
@@ -65,4 +65,14 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         db.close()
 
     def about_device(self):
-        pass
+        db = Database()
+        db.open('database/users.db')
+
+        id_device = self.device_data["ID прибора"]
+
+        device_info = db.search_user('device_id', id_device, 'devices')
+        if device_info:
+            self.show_info.show()
+            self.show_info.show_info(device_info)
+        else:
+            print("Вы выбрали пустую строку!")

@@ -60,7 +60,7 @@ class Database:
                       author_id integer,
                       author_name text,
                       device_name text,
-                      serial_number integer,
+                      serial_number text,
                       engineer text,
                       programmer text,
                       hardware_ver text,
