@@ -45,11 +45,13 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
                 selected_data[self.tableWidget.horizontalHeaderItem(column).text()] = item.text()
 
             self.device_data = selected_data
+            print(self.device_data)
         except:
-            print("Data empty")
+            self.device_data.clear()
+            print(self.device_data)
 
     def update(self):
-        #self.tableWidget.clear()
+        # self.tableWidget.clear()
         # Открывем базу данных
         db = Database()
         db.open('database/users.db')
@@ -68,11 +70,14 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         db = Database()
         db.open('database/users.db')
 
-        id_device = self.device_data["ID прибора"]
+        #id_device = self.device_data["ID прибора"]
+        #print(id_device)
 
-        device_info = db.search_user('device_id', id_device, 'devices')
-        if device_info:
+        data_len = len(self.device_data)
+        if data_len == 0:
+            print("Данных для отображения нет")
+        else:
+            id_device = self.device_data["ID прибора"]
+            device_info = db.search_user('device_id', id_device, 'devices')
             self.show_info.show()
             self.show_info.show_info(device_info)
-        else:
-            print("Вы выбрали пустую строку!")

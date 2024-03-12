@@ -17,6 +17,8 @@ class WindowShowCardInfo(QtWidgets.QDialog, card_info.Ui_dialog_show_card):
         self.line_software_ver.setReadOnly(True)
         self.line_net_settings.setReadOnly(True)
         self.line_protocol.setReadOnly(True)
+        # Инициализируем кнопки
+        self.btn_exit.clicked.connect(self.exit)
 
     def show_info(self, data):
         try:
@@ -38,4 +40,9 @@ class WindowShowCardInfo(QtWidgets.QDialog, card_info.Ui_dialog_show_card):
             else:
                 self.line_protocol.setText("Отсутствует")
         except:
-            print(data)
+            print("Ошибка")
+
+    def exit(self):
+        self.close()
+
+
