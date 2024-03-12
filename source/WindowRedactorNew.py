@@ -2,6 +2,7 @@ from PyQt6 import QtWidgets
 
 import gui.redactor_new as redactor
 from source.WindowNewDeviceCard import WindowCreateCard
+from source.WindowShowCardInfo import WindowShowCardInfo
 from source.database import Database
 
 
@@ -16,6 +17,7 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
             ["ID прибора", "Название прибора", "Серийный номер", "Автор карточки"])
         # Инициализируем фомы
         self.create_card = WindowCreateCard()
+        self.show_info = WindowShowCardInfo()
         # Инициализируем кнопки
         self.btn_create.clicked.connect(self.create_new_card)  # Задаём событие создания новой карточки прибора
         self.btn_about.clicked.connect(self.about_device)  # Событие для подробного описания прибора
@@ -35,7 +37,7 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
 
     def select_row(self):
         selected_row = self.tableWidget.currentRow()
-
+        print(selected_row)
         try:
             selected_data = {}
             for column in range(self.tableWidget.columnCount()):
@@ -47,7 +49,7 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
             print("Data empty")
 
     def update(self):
-        self.tableWidget.clear()
+        #self.tableWidget.clear()
         # Открывем базу данных
         db = Database()
         db.open('database/users.db')

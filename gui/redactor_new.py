@@ -57,9 +57,9 @@ class Ui_redactor_second(object):
         self.btn_refresh = QtWidgets.QPushButton(parent=redactor_second)
         self.btn_refresh.setGeometry(QtCore.QRect(190, 490, 171, 28))
         self.btn_refresh.setObjectName("btn_refresh")
-        self.pushButton_2 = QtWidgets.QPushButton(parent=redactor_second)
-        self.pushButton_2.setGeometry(QtCore.QRect(370, 490, 171, 28))
-        self.pushButton_2.setObjectName("pushButton_2")
+        self.btn_delete_row = QtWidgets.QPushButton(parent=redactor_second)
+        self.btn_delete_row.setGeometry(QtCore.QRect(370, 490, 171, 28))
+        self.btn_delete_row.setObjectName("btn_delete_row")
 
         self.retranslateUi(redactor_second)
         QtCore.QMetaObject.connectSlotsByName(redactor_second)
@@ -77,4 +77,4 @@ class Ui_redactor_second(object):
         self.edit_settings.setText(_translate("redactor_second", "Настройки"))
         self.edit_protocol.setText(_translate("redactor_second", "Протокол"))
         self.btn_refresh.setText(_translate("redactor_second", "Обновить таблицу"))
-        self.pushButton_2.setText(_translate("redactor_second", "Удалить запись"))
+        self.btn_delete_row.setText(_translate("redactor_second", "Удалить запись"))
