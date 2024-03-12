@@ -118,9 +118,10 @@ class Database:
         except:
             return False
 
-    def search_device(self, column, value, table):
+    def search_device(self, table, device_name, serial_number):
         try:
-            self.cursor.execute(f"SELECT * FROM {table} WHERE {column}= (?)", (value,))
+            query = f"SELECT * FROM {table} WHERE device_name = ? AND serial_number = ?"
+            self.cursor.execute(query, (device_name, serial_number))
             self.data = self.cursor.fetchone()
             return dict(zip([description[0] for description in self.cursor.description], self.data))
         except:
