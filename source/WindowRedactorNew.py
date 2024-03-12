@@ -15,8 +15,9 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         # Инициализируем фомы
         self.create_card = WindowCreateCard()
         # Инициализируем кнопки
-        self.btn_create.clicked.connect(
-            self.create_new_card)  # Задаём событие для кнопки создания новой карточки прибора
+        self.btn_create.clicked.connect(self.create_new_card)  # Задаём событие создания новой карточки прибора
+        self.btn_about.clicked.connect(self.about_device) # Событие для подробного описания прибора
+        self.btn_refresh.clicked.connect(self.update) # Событие для кнопки обновления таблицы
         # Инициализируем отслеживание выбранных строк в таблице
         self.tableWidget.selectionModel().selectionChanged.connect(self.select_row)
         #
@@ -44,17 +45,23 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
             print("Data empty")
 
     def update(self):
+        self.tableWidget.clear()
         # Открывем базу данных
         db = Database()
         db.open('database/users.db')
         data = db.read_all_data('devices')
         
         for row, item in enumerate(data):
-            self.tableWidget.insertRow(row)
+            #self.tableWidget.insertRow(row)
             self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(str(item["device_id"])))
             self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(item["device_name"]))
             self.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(str(item["serial_number"])))
             self.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(item["author_name"]))
+
+        db.close()
+
+    def about_device(self):
+        pass
         
 
 
