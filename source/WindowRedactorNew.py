@@ -20,7 +20,7 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         # Инициализируем отслеживание выбранных строк в таблице
         self.tableWidget.selectionModel().selectionChanged.connect(self.select_row)
         #
-        self.init_table("device_id", "device_name", "serial_number", "author_name")
+        self.update()
 
     def register_user_data(self, user_data):  # Сохраняем данные о пользователе
         self.user_data = user_data  # Получаем данные пользователя (для заполнения части БД)
@@ -31,15 +31,31 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
             self.user_data)  # Передаём данные о пользователе в форму регистрации нового прибора
 
     def select_row(self):
-        print("Стркоа выбрана.")
+        selected_row = self.tableWidget.currentRow()
+        
+        try:
+            selected_data = {}
+            for column in range(self.tableWidget.columnCount()):
+                item = self.tableWidget.item(selected_row, column)
+                selected_data[self.tableWidget.horizontalHeaderItem(column).text()] = item.text()
 
-    def init_table(self, *column_names):
+            print(selected_data)
+        except:
+            print("Data empty")
+
+    def update(self):
+        # Открывем базу данных
         db = Database()
         db.open('database/users.db')
-        self.database_data = db.read_all_data('devices')
-
-        for row in self.database_data:
-            self.tableWidget.setItem(0, 0, QtWidgets.QTableWidgetItem("author_name"))
+        data = db.read_all_data('devices')
+        
+        for row, item in enumerate(data):
+            self.tableWidget.insertRow(row)
+            self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(str(item["device_id"])))
+            self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(item["device_name"]))
+            self.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(str(item["serial_number"])))
+            self.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(item["author_name"]))
+        
 
 
 

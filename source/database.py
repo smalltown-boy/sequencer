@@ -127,8 +127,18 @@ class Database:
             return False
 
     def read_all_data(self, table):
-        self.cursor.execute(f"SELECT * from {table}")
-        data = self.cursor.fetchall()
+        # Получаем имена столбцов таблицы
+        self.cursor.execute(f"PRAGMA table_info({table})")
+        columns = [column[1] for column in self.cursor.fetchall()]
+        # Выполняем запрос к базе данных
+        self.cursor.execute(f"SELECT * FROM {table}")
+        rows = self.cursor.fetchall()
+        # Создаем список словарей
+        data = []
+        for row in rows:
+            data.append(dict(zip(columns, row)))
+            
         return data
+        
 
 
