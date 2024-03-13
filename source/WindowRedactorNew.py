@@ -3,6 +3,7 @@ from PyQt6 import QtWidgets
 import gui.redactor_new as redactor
 from source.WindowNewDeviceCard import WindowCreateCard
 from source.WindowShowCardInfo import WindowShowCardInfo
+from source.WindowAddNetSettings import WindowAddNetSettings
 from source.database import Database
 
 
@@ -19,10 +20,12 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         # Инициализируем фомы
         self.create_card = WindowCreateCard()
         self.show_info = WindowShowCardInfo()
+        self.create_net_settings = WindowAddNetSettings()
         # Инициализируем кнопки
         self.btn_create.clicked.connect(self.create_new_card)  # Задаём событие создания новой карточки прибора
         self.btn_about.clicked.connect(self.about_device)  # Событие для подробного описания прибора
         self.btn_refresh.clicked.connect(self.update)  # Событие для кнопки обновления таблицы
+        self.btn_create_net.clicked.connect(self.create_new_settings)
         # Инициализируем отслеживание выбранных строк в таблице
         self.tableWidget.selectionModel().selectionChanged.connect(self.select_row)
         #
@@ -35,6 +38,14 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.create_card.show()  # Вызываем форму создания карточки прибора
         self.create_card.register_user_data(
             self.user_data)  # Передаём данные о пользователе в форму регистрации нового прибора
+
+    def create_new_settings(self): # Создаём новые сетевые настройки
+        data_len = len(self.device_data)
+        if data_len == 0:
+            print("Нельзя создать файл с настройками, если нет карточки прибора!")
+        else:
+            self.create_net_settings.show()
+            self.create_net_settings.device_data = self.device_data # Передаём настройки в форму
 
     def select_row(self):
         selected_row = self.tableWidget.currentRow()
