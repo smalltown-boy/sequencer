@@ -140,6 +140,21 @@ class Database:
             data.append(dict(zip(columns, row)))
             
         return data
+
+    def check_data_empty(self, column, table, id_device):
+        self.cursor.execute(f"SELECT {column} FROM {table} WHERE device_id = ?", (id_device,))
+        result = self.cursor.fetchone()
+
+        if result and not result[0]:  # Если результат не пустой
+            return True
+        else:
+            return False
+
+    def write_json_data(self, table, column, id_device, json_data):
+        self.cursor.execute(f"UPDATE {table} SET {column} = ? WHERE device_id = ?", (json_data, id_device))
+
+
+
         
 
 

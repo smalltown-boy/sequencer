@@ -81,9 +81,6 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         db = Database()
         db.open('database/users.db')
 
-        #id_device = self.device_data["ID прибора"]
-        #print(id_device)
-
         data_len = len(self.device_data)
         if data_len == 0:
             print("Данных для отображения нет")
@@ -92,3 +89,5 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
             device_info = db.search_user('device_id', id_device, 'devices')
             self.show_info.show()
             self.show_info.show_info(device_info)
+
+        db.close()
