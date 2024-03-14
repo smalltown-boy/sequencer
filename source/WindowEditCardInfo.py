@@ -5,7 +5,7 @@ import gui.sequencer_new_card as create_card
 from source.database import Database
 
 
-class WindowCreateCard(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  # Окно редактора
+class WindowEditCardInfo(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  # Окно редактора
     def __init__(self, parent=None):  # Функция инициализации
         QtWidgets.QWidget.__init__(self, parent)
         self.dev = None
@@ -14,8 +14,8 @@ class WindowCreateCard(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  #
         self.btn_exit.clicked.connect(self.exit)  # Задаём событие для кнопки "Отмена"
         self.btn_save.clicked.connect(self.save_card)  # Задаём событие для кнопки "Сохранить"
 
-    def exit(self):  # Отмена записи
-        self.close()
+    def exit(self):
+        pass
 
     def save_card(self):
         device_name = self.line_name.text()  # Сохраняем имя прибора
@@ -29,20 +29,21 @@ class WindowCreateCard(QtWidgets.QDialog, create_card.Ui_create_card_dialog):  #
         db = Database()
         db.open('database/users.db')
 
-        if all([device_name, serial_number, engineer_name, programmer_name, hardware_version, software_version, description]):
-            device = db.search_device('devices', device_name, serial_number)
-            if device:
-                pass # Здесь нужно вывести окно с ошибкой
-            else:
-                db.add_device(self.user_data["user_id"], self.user_data["name"], device_name, serial_number,
-                              engineer_name, programmer_name,
-                              hardware_version, software_version, description)
-                db.commit()  # Сохраняем изменения
-                self.close()
+        if all([device_name, serial_number, engineer_name, programmer_name, hardware_version, software_version,
+                description]):
+            pass
         else:
             print("Ничего не введено!")
 
-        db.close()
-
-    def register_user_data(self, user_data):  # Сохраняем данные о пользователе
-        self.user_data = user_data  # Получаем данные пользователя
+    def show_info(self, data):
+        try:
+            self.user_data = data
+            self.line_name.setText(data["device_name"])
+            self.line_serial_num.setText(data["serial_number"])
+            self.line_engineer.setText(data["engineer"])
+            self.line_programmer.setText(data["programmer"])
+            self.plain_description.setPlainText(data["description"])
+            self.line_hardware_ver.setText(data["hardware_ver"])
+            self.line_software_ver.setText(data["firmware_ver"])
+        except:
+            print("Ошибка")

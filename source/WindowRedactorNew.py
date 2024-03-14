@@ -4,6 +4,7 @@ import gui.redactor_new as redactor
 from source.WindowNewDeviceCard import WindowCreateCard
 from source.WindowShowCardInfo import WindowShowCardInfo
 from source.WindowAddNetSettings import WindowAddNetSettings
+from source.WindowEditCardInfo import WindowEditCardInfo
 from source.database import Database
 
 
@@ -21,11 +22,13 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.create_card = WindowCreateCard()
         self.show_info = WindowShowCardInfo()
         self.create_net_settings = WindowAddNetSettings()
+        self.edit_card_info = WindowEditCardInfo()
         # Инициализируем кнопки
         self.btn_create.clicked.connect(self.create_new_card)  # Задаём событие создания новой карточки прибора
         self.btn_about.clicked.connect(self.about_device)  # Событие для подробного описания прибора
         self.btn_refresh.clicked.connect(self.update)  # Событие для кнопки обновления таблицы
         self.btn_create_net.clicked.connect(self.create_new_settings)
+        self.btn_edit_device.clicked.connect(self.edit_card)
         # Инициализируем отслеживание выбранных строк в таблице
         self.tableWidget.selectionModel().selectionChanged.connect(self.select_row)
         #
@@ -39,6 +42,21 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.create_card.register_user_data(
             self.user_data)  # Передаём данные о пользователе в форму регистрации нового прибора
 
+    def edit_card(self): # Функция редактирования уже существующей карты
+        db = Database()
+        db.open('database/users.db')
+
+        data_len = len(self.device_data)
+        if data_len == 0:
+            print("Данных для отображения нет")
+        else:
+            id_device = self.device_data["ID прибора"]
+            device_info = db.search_user('device_id', id_device, 'devices')
+            self.edit_card_info.show()
+            self.edit_card_info.show_info(device_info)
+
+        db.close()
+
     def create_new_settings(self): # Создаём новые сетевые настройки
         data_len = len(self.device_data)
         if data_len == 0:
@@ -46,6 +64,9 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         else:
             self.create_net_settings.show()
             self.create_net_settings.device_data = self.device_data # Передаём настройки в форму
+
+    def edit_net_settings(self):
+        pass
 
     def select_row(self):
         selected_row = self.tableWidget.currentRow()

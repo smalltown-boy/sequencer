@@ -2,6 +2,7 @@
 import sqlite3
 import json
 
+
 # Класс для работы с базами данных
 class Database:
     # Конструктор
@@ -81,13 +82,30 @@ class Database:
             "insert into users (login, name, company, post, password, rights) values (?, ?, ?, ?, ?, ?)",
             (login, name, company, post, password, rights))
 
-    def add_device(self, author_id, author_name, device_name, serial_number, engineer, programmer, hardware_ver, software_ver,
+    def add_device(self, author_id, author_name, device_name, serial_number, engineer, programmer, hardware_ver,
+                   software_ver,
                    description):
         try:
-            data = (author_id, author_name, device_name, serial_number, engineer, programmer, hardware_ver, software_ver, description)
+            data = (
+                author_id, author_name, device_name, serial_number, engineer, programmer, hardware_ver, software_ver,
+                description)
             sqlite_param = """insert into devices (author_id, author_name, device_name, serial_number, engineer, programmer, 
             hardware_ver, firmware_ver, description) values (?, ?, ?, ?, ?, ?, ?, ?, ?);"""
             self.cursor.execute(sqlite_param, data)
+        except sqlite3.Error as error:
+            print("Что-то произошло", error)
+
+    def update_device(self, author_id, author_name, device_name, serial_number, engineer, programmer,
+                      hardware_ver, software_ver,
+                      description, device_id):
+        try:
+            self.cursor.execute("UPDATE devices SET author_id = ?, author_name = ?, device_name = ?, serial_number = ?,"
+                                "engineer = ?, programmer = ?,"
+                                "hardware_ver = ?, software_ver = ?, description = ? WHERE device_id = ?", (
+                                    author_id, author_name, device_name, serial_number, engineer, programmer,
+                                    hardware_ver,
+                                    software_ver,
+                                    description, device_id))
         except sqlite3.Error as error:
             print("Что-то произошло", error)
 
@@ -138,13 +156,13 @@ class Database:
         data = []
         for row in rows:
             data.append(dict(zip(columns, row)))
-            
+
         return data
 
     def check_data_empty(self, column, table, id_device):
         self.cursor.execute(f"SELECT {column} FROM {table} WHERE device_id = ?", (id_device,))
         result = self.cursor.fetchone()
-        
+
         if result[0] == None:
             return True
         else:
@@ -159,8 +177,3 @@ class Database:
         row = self.cursor.fetchone()
         json_data = json.loads(row[0])
         return json_data
-
-
-        
-
-
