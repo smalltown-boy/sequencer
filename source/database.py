@@ -144,8 +144,8 @@ class Database:
     def check_data_empty(self, column, table, id_device):
         self.cursor.execute(f"SELECT {column} FROM {table} WHERE device_id = ?", (id_device,))
         result = self.cursor.fetchone()
-
-        if result and not result[0]:  # Если результат не пустой
+        
+        if result[0] == None:
             return True
         else:
             return False

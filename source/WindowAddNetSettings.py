@@ -36,22 +36,24 @@ class WindowAddNetSettings(QtWidgets.QDialog, create_net_settings.Ui_dialog_net_
         port = self.port_edit.text()
 
         if all([ip_addr, mask, port]):  # Если все поля заполнены
-            # Формируем json-документ
-            net_settngs = {"ip_addr": ip_addr, "mask": mask, "port": port}
-            # Преобразуем словарь в json
-            json_file = json.dumps(net_settngs)
-            # Записываем его в базу данных
             db = Database()
-            db.open('database/users.db')
-            not_empty = db.check_data_empty("net_settings", "devices", self.device_data[0])
-            if not_empty is True:
-                print("Тут надо вывести предупреждение, что поле будет перезаписано.")
-            else:
-                db.write_json_data("devices", "net_settings", self.device_data[0], json_file)
+            db.open("database/users.db")
+            # Проверяем, является ли пустым поле для хранения настроек
+            data_status = db.check_data_empty("net_settings", "devices", self.device_data["ID прибора"])
+            
+            if data_status: # Если данных в поле нету
+                # Формируем json-документ
+                net_settngs = {"ip_addr": ip_addr, "mask": mask, "port": port}
+                # Преобразуем словарь в json
+                json_file = json.dumps(net_settngs)
+                # Записываем файл в базу
+                db.write_json_data("devices", "net_settings", self.device_data["ID прибора"], json_file)
                 db.commit()
-                print("Данные записаны.")
+                self.close()
+            else: # Если они там есть
+                print("Тут должно быть предупреждение, что данные будут перезаписаны.")
+                
             db.close()
-
         else:
             print("Ошибка. Заполните все поля.")
-            self.close()
+

@@ -57,9 +57,32 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
 
             self.device_data = selected_data
             print(self.device_data)
+            # Так как тут есть карточка прибора, делаем кнопку создания недоступной
+            self.btn_create.setEnabled(False)
+            # Открываем базу данных, чтобы узнать состояние интересующих нас полей
+            db = Database()
+            db.open('database/users.db')
+            # Смотрим состояние интересующих нас полей
+            file_net = db.check_data_empty("net_settings", "devices", self.device_data["ID прибора"])
+            file_protocol = db.check_data_empty("protocol", "devices", self.device_data["ID прибора"])
+            
+            if not file_net: # Если файл с сетевыми настройками существует
+                self.btn_create_net.setEnabled(False)
+            else:
+                self.btn_create_net.setEnabled(True)
+                
+            if not file_protocol: # Если файл с протоколом существует
+                self.btn_create_protocol.setEnabled(False)
+            else:
+                self.btn_create_protocol.setEnabled(True)
+                
+            db.close() # Закрываем базу данных
         except:
             self.device_data.clear()
-            print(self.device_data)
+            # Так как все поля пустые, делаем кнопки создания доступными
+            self.btn_create.setEnabled(True)
+            self.btn_create_net.setEnabled(True)
+            self.btn_create_protocol.setEnabled(True)
 
     def update(self):
         # self.tableWidget.clear()
