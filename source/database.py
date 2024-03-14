@@ -1,6 +1,6 @@
 # Импорт модуля
 import sqlite3
-
+import json
 
 # Класс для работы с базами данных
 class Database:
@@ -151,8 +151,14 @@ class Database:
             return False
 
     def write_json_data(self, table, column, id_device, json_data):
-        self.cursor.execute(f"UPDATE {table} SET {column} = ? WHERE device_id = ?", (json_data, id_device))
+        json_file = json.dumps(json_data)
+        self.cursor.execute(f"UPDATE {table} SET {column} = ? WHERE device_id = ?", (json_file, id_device))
 
+    def read_json_data(self, table, column, id_device):
+        self.cursor.execute(f"SELECT {column} FROM {table} WHERE device_id = ?", (id_device,))
+        row = self.cursor.fetchone()
+        json_data = json.loads(row[0])
+        return json_data
 
 
         

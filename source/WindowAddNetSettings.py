@@ -44,10 +44,8 @@ class WindowAddNetSettings(QtWidgets.QDialog, create_net_settings.Ui_dialog_net_
             if data_status: # Если данных в поле нету
                 # Формируем json-документ
                 net_settngs = {"ip_addr": ip_addr, "mask": mask, "port": port}
-                # Преобразуем словарь в json
-                json_file = json.dumps(net_settngs)
                 # Записываем файл в базу
-                db.write_json_data("devices", "net_settings", self.device_data["ID прибора"], json_file)
+                db.write_json_data("devices", "net_settings", self.device_data["ID прибора"], net_settngs)
                 db.commit()
                 self.close()
             else: # Если они там есть
