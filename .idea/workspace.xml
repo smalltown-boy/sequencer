@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="002aa694-e723-4d21-92da-d108fb19b6a8" name="Changes" comment="" />
+    <list default="true" id="002aa694-e723-4d21-92da-d108fb19b6a8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/source/WindowProtocolManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gui/protocol.py" beforeDir="false" afterPath="$PROJECT_DIR$/gui/protocol.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/WindowRedactorNew.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/WindowRedactorNew.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

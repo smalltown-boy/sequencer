@@ -66,6 +66,9 @@ class Ui_diaog_protocol_redactor(object):
         self.btn_delete_command = QtWidgets.QPushButton(parent=diaog_protocol_redactor)
         self.btn_delete_command.setGeometry(QtCore.QRect(180, 540, 151, 28))
         self.btn_delete_command.setObjectName("btn_delete_command")
+        self.btn_save_protocol = QtWidgets.QPushButton(parent=diaog_protocol_redactor)
+        self.btn_save_protocol.setGeometry(QtCore.QRect(350, 540, 151, 28))
+        self.btn_save_protocol.setObjectName("btn_save_protocol")
 
         self.retranslateUi(diaog_protocol_redactor)
         QtCore.QMetaObject.connectSlotsByName(diaog_protocol_redactor)
@@ -79,3 +82,4 @@ class Ui_diaog_protocol_redactor(object):
         self.checkBox_no_answer.setText(_translate("diaog_protocol_redactor", "Нет ответа"))
         self.btn_save_command.setText(_translate("diaog_protocol_redactor", "Сохранить команду"))
         self.btn_delete_command.setText(_translate("diaog_protocol_redactor", "Удалить команду"))
+        self.btn_save_protocol.setText(_translate("diaog_protocol_redactor", "Сохранить протокол"))

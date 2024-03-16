@@ -6,6 +6,7 @@ from source.WindowShowCardInfo import WindowShowCardInfo
 from source.WindowAddNetSettings import WindowAddNetSettings
 from source.WindowEditCardInfo import WindowEditCardInfo
 from source.WindowEditNetInfo import WindowEditNetSettings
+from source.WindowProtocolManager import WindowProtocolManager
 from source.database import Database
 
 
@@ -25,13 +26,15 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.create_net_settings = WindowAddNetSettings()
         self.edit_card_info = WindowEditCardInfo()
         self.edit_net_parameters = WindowEditNetSettings()
+        self.protocol_manager = WindowProtocolManager()
         # Инициализируем кнопки
         self.btn_create.clicked.connect(self.create_new_card)  # Задаём событие создания новой карточки прибора
         self.btn_about.clicked.connect(self.about_device)  # Событие для подробного описания прибора
         self.btn_refresh.clicked.connect(self.update)  # Событие для кнопки обновления таблицы
-        self.btn_create_net.clicked.connect(self.create_new_settings)
-        self.btn_edit_device.clicked.connect(self.edit_card)
-        self.btn_edit_settings.clicked.connect(self.edit_net_settings)
+        self.btn_create_net.clicked.connect(self.create_new_settings) # Событие для создания сетевых настроек
+        self.btn_edit_device.clicked.connect(self.edit_card) # Событие для редактирования карточки
+        self.btn_edit_settings.clicked.connect(self.edit_net_settings) # Событие для редактирования настроек
+        self.btn_create_protocol.clicked.connect(self.create_protocol) # Событие для создания протокола
         # Инициализируем отслеживание выбранных строк в таблице
         self.tableWidget.selectionModel().selectionChanged.connect(self.select_row)
         #
@@ -160,3 +163,7 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
             self.show_info.exec()
 
         db.close()
+
+    def create_protocol(self):
+        self.protocol_manager.register_user_data(self.user_data)
+        self.protocol_manager.exec()
