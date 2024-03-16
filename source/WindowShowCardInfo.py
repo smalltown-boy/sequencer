@@ -57,8 +57,8 @@ class WindowShowCardInfo(QtWidgets.QDialog, card_info.Ui_dialog_show_card):
             print("Ошибка")
 
     def show_net_settings(self):
-        self.net_info.show()
         self.net_info.show_info(self.device_data)
+        self.net_info.exec()
 
     def show_protocol(self):
         pass

@@ -11,11 +11,12 @@ class WindowEditCardInfo(QtWidgets.QDialog, create_card.Ui_create_card_dialog): 
         self.dev = None
         self.setupUi(self)
         self.user_data = None
+        self.device_data = None
         self.btn_exit.clicked.connect(self.exit)  # Задаём событие для кнопки "Отмена"
         self.btn_save.clicked.connect(self.save_card)  # Задаём событие для кнопки "Сохранить"
 
     def exit(self):
-        pass
+        self.close()
 
     def save_card(self):
         device_name = self.line_name.text()  # Сохраняем имя прибора
@@ -28,16 +29,21 @@ class WindowEditCardInfo(QtWidgets.QDialog, create_card.Ui_create_card_dialog): 
 
         db = Database()
         db.open('database/users.db')
-
-        if all([device_name, serial_number, engineer_name, programmer_name, hardware_version, software_version,
-                description]):
-            pass
+        
+        if all([device_name, serial_number, engineer_name, programmer_name, hardware_version, software_version, description]):
+            data_to_update = (device_name, serial_number, engineer_name, programmer_name, hardware_version, software_version, description)
+            db.update_device(data_to_update, self.device_data["device_id"])
+            db.commit()
+            self.close()
+            print("Сохранено!")
         else:
             print("Ничего не введено!")
+            
+        db.close()
 
     def show_info(self, data):
         try:
-            self.user_data = data
+            self.device_data = data
             self.line_name.setText(data["device_name"])
             self.line_serial_num.setText(data["serial_number"])
             self.line_engineer.setText(data["engineer"])

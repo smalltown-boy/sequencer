@@ -95,17 +95,21 @@ class Database:
         except sqlite3.Error as error:
             print("Что-то произошло", error)
 
-    def update_device(self, author_id, author_name, device_name, serial_number, engineer, programmer,
-                      hardware_ver, software_ver,
-                      description, device_id):
+    def update_device(self, data, device_id):
         try:
-            self.cursor.execute("UPDATE devices SET author_id = ?, author_name = ?, device_name = ?, serial_number = ?,"
-                                "engineer = ?, programmer = ?,"
-                                "hardware_ver = ?, software_ver = ?, description = ? WHERE device_id = ?", (
-                                    author_id, author_name, device_name, serial_number, engineer, programmer,
-                                    hardware_ver,
-                                    software_ver,
-                                    description, device_id))
+            # Проверяем существование записи с переданным device_id
+            self.cursor.execute("SELECT * FROM devices WHERE device_id = ?", (device_id,))
+            existing_device = self.cursor.fetchone()
+            
+            print(existing_device)
+    
+            if existing_device:
+                columns_to_update = ["device_name", "serial_number", "engineer", "programmer", "hardware_ver", "firmware_ver", "description"]
+                query = f"UPDATE devices SET {', '.join([f'{col} = ?' for col in columns_to_update])} WHERE device_id = ?"
+                data_to_update = data + (device_id,)
+                self.cursor.execute(query, data_to_update)
+                pass
+
         except sqlite3.Error as error:
             print("Что-то произошло", error)
 

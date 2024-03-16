@@ -5,6 +5,7 @@ from source.WindowNewDeviceCard import WindowCreateCard
 from source.WindowShowCardInfo import WindowShowCardInfo
 from source.WindowAddNetSettings import WindowAddNetSettings
 from source.WindowEditCardInfo import WindowEditCardInfo
+from source.WindowEditNetInfo import WindowEditNetSettings
 from source.database import Database
 
 
@@ -23,12 +24,14 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.show_info = WindowShowCardInfo()
         self.create_net_settings = WindowAddNetSettings()
         self.edit_card_info = WindowEditCardInfo()
+        self.edit_net_parameters = WindowEditNetSettings()
         # Инициализируем кнопки
         self.btn_create.clicked.connect(self.create_new_card)  # Задаём событие создания новой карточки прибора
         self.btn_about.clicked.connect(self.about_device)  # Событие для подробного описания прибора
         self.btn_refresh.clicked.connect(self.update)  # Событие для кнопки обновления таблицы
         self.btn_create_net.clicked.connect(self.create_new_settings)
         self.btn_edit_device.clicked.connect(self.edit_card)
+        self.btn_edit_settings.clicked.connect(self.edit_net_settings)
         # Инициализируем отслеживание выбранных строк в таблице
         self.tableWidget.selectionModel().selectionChanged.connect(self.select_row)
         #
@@ -38,35 +41,58 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.user_data = user_data  # Получаем данные пользователя (для заполнения части БД)
 
     def create_new_card(self):  # Вызов формы создания новой карты
-        self.create_card.show()  # Вызываем форму создания карточки прибора
-        self.create_card.register_user_data(
-            self.user_data)  # Передаём данные о пользователе в форму регистрации нового прибора
+        self.create_card.register_user_data(self.user_data)  # Передаём данные о пользователе в форму регистрации нового прибора
+        self.create_card.exec()  # Вызываем форму создания карточки прибора
 
     def edit_card(self): # Функция редактирования уже существующей карты
-        db = Database()
-        db.open('database/users.db')
-
         data_len = len(self.device_data)
         if data_len == 0:
-            print("Данных для отображения нет")
+            print("Нельзя редактировать карточку прибора, если её нет!")
         else:
-            id_device = self.device_data["ID прибора"]
-            device_info = db.search_user('device_id', id_device, 'devices')
-            self.edit_card_info.show()
-            self.edit_card_info.show_info(device_info)
-
-        db.close()
+            db = Database()
+            db.open('database/users.db')
+            
+            dev_info = db.search_device('devices', self.device_data["Название прибора"], self.device_data["Серийный номер"]) # Получаем подробную инфомрацию о приборе, который мы выбрали
+            self.edit_card_info.show_info(dev_info)               # Передаём подробную информацию о приборе в форму 
+            self.edit_card_info.user_data = self.user_data        # Передаём подробную информацию о пользователи в форму
+            
+            device_author_id = dev_info["author_id"]
+            user_id = self.user_data["user_id"]
+            
+            if device_author_id == user_id:
+                db.close()
+                self.edit_card_info.exec()
+            else:
+                print("Вы не можете редактировать карточку чужого авторства!")
+                db.close()
 
     def create_new_settings(self): # Создаём новые сетевые настройки
         data_len = len(self.device_data)
         if data_len == 0:
             print("Нельзя создать файл с настройками, если нет карточки прибора!")
         else:
-            self.create_net_settings.show()
             self.create_net_settings.device_data = self.device_data # Передаём настройки в форму
+            self.create_net_settings.exec()
 
-    def edit_net_settings(self):
-        pass
+    def edit_net_settings(self): # Редактируем уже существущие сетевые настройки
+        data_len = len(self.device_data)
+        if data_len == 0:
+            print("Выберите прибор, чьи настройки вы хотите отредактировать!")
+        else:
+            print(self.device_data)
+            try:
+                # Открываем базу данных
+                db = Database()
+                db.open('database/users.db')
+                # Читаем данные json
+                json_file = db.read_json_data("devices", "net_settings", self.device_data["ID прибора"])
+                #
+                db.close()
+                self.edit_net_parameters.device_data = self.device_data
+                self.edit_net_parameters.show_info(json_file)
+                self.edit_net_parameters.exec()
+            except EOFError:
+                print(EOFError)
 
     def select_row(self):
         selected_row = self.tableWidget.currentRow()
@@ -77,7 +103,6 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
                 selected_data[self.tableWidget.horizontalHeaderItem(column).text()] = item.text()
 
             self.device_data = selected_data
-            print(self.device_data)
             # Так как тут есть карточка прибора, делаем кнопку создания недоступной
             self.btn_create.setEnabled(False)
             # Открываем базу данных, чтобы узнать состояние интересующих нас полей
@@ -131,7 +156,7 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         else:
             id_device = self.device_data["ID прибора"]
             device_info = db.search_user('device_id', id_device, 'devices')
-            self.show_info.show()
             self.show_info.show_info(device_info)
+            self.show_info.exec()
 
         db.close()
