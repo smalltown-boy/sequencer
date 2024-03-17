@@ -63,7 +63,7 @@ class WindowProtocolManager(QtWidgets.QDialog,
             else:
                 # Выводим сообщение об ошибке
                 print("Заглушка для ошибки, если не заполнены первые два поля.")
-        print(self.command_flow)
+        self.update()
 
     def delete_command(self):
         pass
@@ -72,7 +72,13 @@ class WindowProtocolManager(QtWidgets.QDialog,
         pass
 
     def update(self):
-        pass
+        row = 0
+        for key, value in self.command_flow.items():
+            self.table_protocol.insertRow(row)
+            self.table_protocol.setItem(row, 0, QtWidgets.QTableWidgetItem(key))
+            self.table_protocol.setItem(row, 1, QtWidgets.QTableWidgetItem(str(value['request'])))
+            self.table_protocol.setItem(row, 2, QtWidgets.QTableWidgetItem(str(value['answer'])))
+            row += 1
 
     def select_row(self):
         pass
