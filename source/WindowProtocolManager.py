@@ -18,8 +18,12 @@ class WindowProtocolManager(QtWidgets.QDialog,
         self.btn_delete_command.clicked.connect(self.delete_command)  # Кнопка удаления команды
         self.btn_save_protocol.clicked.connect(self.save_protocol)  # Кнопка сохранения протокола
         self.checkBox_no_answer.stateChanged.connect(self.check_box)  # Функция для вызова чек бокса
+        # Инициализируем отслеживание выбранных строк в таблице
+        self.table_protocol.selectionModel().selectionChanged.connect(self.select_row)
         # Переменная для хранения протокола
         self.command_flow = {}
+        # Переменная для выбранных данных
+        self.selected_data = None
         # Переменная для чек бокса
         self.check_box = False
 
@@ -72,12 +76,12 @@ class WindowProtocolManager(QtWidgets.QDialog,
         pass
 
     def update(self):
-        self.table_protocol.clear() # Очищаем таблицу
-        self.table_protocol.setRowCount(0) # Удаляем все строки
+        self.table_protocol.clear()  # Очищаем таблицу
+        self.table_protocol.setRowCount(0)  # Удаляем все строки
 
-        x = len(self.command_flow) # Смотрим, сколько ключей находится в словаре, содержащим команды
+        x = len(self.command_flow)  # Смотрим, сколько ключей находится в словаре, содержащим команды
 
-        for a in range(x): # Добавляем строки по количеству ключей
+        for a in range(x):  # Добавляем строки по количеству ключей
             self.table_protocol.insertRow(a)
 
         row = 0
@@ -89,7 +93,19 @@ class WindowProtocolManager(QtWidgets.QDialog,
             row += 1
 
     def select_row(self):
-        pass
+        selected_row = self.table_protocol.currentRow()
+        print(selected_row)
+        try:
+            selected_data = {}
+            for column in range(self.table_protocol.columnCount()):
+                item = self.table_protocol.item(selected_row, column)
+                selected_data[self.table_protocol.horizontalHeaderItem(column).text()] = item.text()
+
+            self.selected_data = selected_data
+            print(self.selected_data)
+        except EOFError:
+            self.selected_data.clear()
+            print(EOFError)
 
     def check_box(self):
         if self.checkBox_no_answer.isChecked():
