@@ -69,7 +69,12 @@ class WindowProtocolManager(QtWidgets.QDialog,
         self.update()
 
     def delete_command(self):
-        pass
+        if self.selected_data:  # Если одна из строк выбрана
+            print(self.selected_data[0])
+            self.command_flow.pop(self.selected_data[0])
+            self.update()
+        else:
+            print("Нельзя удалить строку: данных нет.")
 
     def save_protocol(self):
         pass
@@ -83,7 +88,7 @@ class WindowProtocolManager(QtWidgets.QDialog,
         for a in range(x):  # Добавляем строки по количеству ключей
             self.table_protocol.insertRow(a)
 
-        self.table_protocol.insertRow(1) # Добавляем ещё одну строку (на самом деле, это костыль)
+        self.table_protocol.insertRow(1)  # Добавляем ещё одну строку (на самом деле, это костыль)
 
         row = 0
         for key, value in self.command_flow.items():
