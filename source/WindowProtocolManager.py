@@ -72,9 +72,17 @@ class WindowProtocolManager(QtWidgets.QDialog,
         pass
 
     def update(self):
+        self.table_protocol.clear() # Очищаем таблицу
+        self.table_protocol.setRowCount(0) # Удаляем все строки
+
+        x = len(self.command_flow) # Смотрим, сколько ключей находится в словаре, содержащим команды
+
+        for a in range(x): # Добавляем строки по количеству ключей
+            self.table_protocol.insertRow(a)
+
         row = 0
         for key, value in self.command_flow.items():
-            self.table_protocol.insertRow(row)
+            # Заполняем таблицу
             self.table_protocol.setItem(row, 0, QtWidgets.QTableWidgetItem(key))
             self.table_protocol.setItem(row, 1, QtWidgets.QTableWidgetItem(str(value['request'])))
             self.table_protocol.setItem(row, 2, QtWidgets.QTableWidgetItem(str(value['answer'])))
