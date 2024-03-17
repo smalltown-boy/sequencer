@@ -28,8 +28,12 @@ class WindowProtocolManager(QtWidgets.QDialog,
 
     def save_command(self):
         command_name = self.line_name.text()
-        command_request = self.line_request.text()
-        command_answer = self.line_answer.text()
+        command_request = self.line_request.text().replace('/0x', '').split('/')
+        command_answer = self.line_answer.text().replace('/0x', '').split('/')
+
+        # Вот здесь мы данные переводим в hex формат
+        command_request = [int(x, 16) for x in command_request]
+        command_answer = [int(x, 16) for x in command_answer]
 
         if not self.check_box:  # Если чек бокс не поставлен
             if all([command_name, command_request, command_answer]):  # Если все поля заполнены
