@@ -34,17 +34,32 @@ class WindowProtocolManager(QtWidgets.QDialog,
         if not self.check_box:  # Если чек бокс не поставлен
             if all([command_name, command_request, command_answer]):  # Если все поля заполнены
                 # Сохраняем данные
-                pass
+                if command_name not in self.command_flow:
+                    # Если команды нет в списке, то добавляем её
+                    self.command_flow[command_name] = {"request": command_request, "answer": command_answer}
+                    print("Данные сохранены.")
+                else:
+                    # Если нет, то обновим команду
+                    self.command_flow[command_name].update({"request": command_request, "answer": command_answer})
+                    print("Команда обновлена!")
             else:
                 # Выводим сообщение об ошибке
                 print("Заглушка для ошибки, если не заполнены все поля.")
         else:  # Если чек бокс поставлен
             if all([command_name, command_request]):  # Если два первых поля заполнены
                 # Сохраняем данные
-                pass
+                if command_name not in self.command_flow:
+                    # Если команды нет в списке, то добавляем её
+                    self.command_flow[command_name] = {"request": command_request, "answer": None}
+                    print("Данные сохранены.")
+                else:
+                    # Если нет, то обновим команду
+                    self.command_flow[command_name].update({"request": command_request, "answer": None})
+                    print("Команда обновлена!")
             else:
                 # Выводим сообщение об ошибке
                 print("Заглушка для ошибки, если не заполнены первые два поля.")
+        print(self.command_flow)
 
     def delete_command(self):
         pass
