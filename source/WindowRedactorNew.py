@@ -35,6 +35,7 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.btn_edit_device.clicked.connect(self.edit_card) # Событие для редактирования карточки
         self.btn_edit_settings.clicked.connect(self.edit_net_settings) # Событие для редактирования настроек
         self.btn_create_protocol.clicked.connect(self.create_protocol) # Событие для создания протокола
+        self.btn_edit_protocol.clicked.connect(self.edit_protocol) # Событие для редактирования протокола
         # Инициализируем отслеживание выбранных строк в таблице
         self.tableWidget.selectionModel().selectionChanged.connect(self.select_row)
         #
@@ -168,3 +169,26 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.protocol_manager.register_user_data(self.user_data)
         self.protocol_manager.device_data = self.device_data
         self.protocol_manager.exec()
+
+    def edit_protocol(self):
+        data_len = len(self.device_data)
+        if data_len == 0:
+            print("Выберите прибор, чьи настройки вы хотите отредактировать!")
+        else:
+            print(self.device_data)
+            try:
+                # Открываем базу данных
+                db = Database()
+                db.open('database/users.db')
+                # Читаем данные json
+                json_file = db.read_json_data("devices", "protocol", self.device_data["ID прибора"])
+                #
+                db.close()
+                #
+                self.protocol_manager.register_user_data(self.user_data)
+                self.protocol_manager.device_data = self.device_data
+                self.protocol_manager.command_flow = json_file
+                self.protocol_manager.update()
+                self.protocol_manager.exec()
+            except EOFError:
+                print(EOFError)

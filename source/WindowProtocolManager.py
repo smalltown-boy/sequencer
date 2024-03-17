@@ -132,3 +132,5 @@ class WindowProtocolManager(QtWidgets.QDialog,
         else:
             self.check_box = False
             self.line_answer.setReadOnly(False)  # Делаем окно ввода ответа доступным
+
+
