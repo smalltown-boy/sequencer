@@ -9,6 +9,7 @@ class WindowProtocolManager(QtWidgets.QDialog,
     def __init__(self, parent=None):  # Функция инициализации
         QtWidgets.QWidget.__init__(self, parent)
         self.user_data = None
+        self.device_data = None
         self.setupUi(self)
         # Настраиваем таблицу
         self.table_protocol.setHorizontalHeaderLabels(
@@ -34,9 +35,6 @@ class WindowProtocolManager(QtWidgets.QDialog,
         command_name = self.line_name.text()
         command_request = self.line_request.text().replace('/0x', '').split('/')
         command_answer = self.line_answer.text().replace('/0x', '').split('/')
-
-        print(command_request)
-        print(command_answer)
 
         if not self.check_box:  # Если чек бокс не поставлен
             if all([command_name, command_request, command_answer]):  # Если все поля заполнены
@@ -77,7 +75,21 @@ class WindowProtocolManager(QtWidgets.QDialog,
             print("Нельзя удалить строку: данных нет.")
 
     def save_protocol(self):
-        pass
+        db = Database()
+        db.open("database/users.db")
+        # Проверяем, является ли пустым поле для хранения настроек
+        data_status = db.check_data_empty("protocol", "devices", self.device_data["ID прибора"])
+
+        if data_status:  # Если данных в поле нету
+            # Записываем файл в базу
+            db.write_json_data("devices", "protocol", self.device_data["ID прибора"], self.command_flow)
+            db.commit()
+            self.close()
+        else:  # Если они там есть
+            print("Тут должно быть предупреждение, что данные будут перезаписаны.")
+
+        db.close()
+
 
     def update(self):
         self.table_protocol.clear()  # Очищаем таблицу

@@ -166,4 +166,5 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
 
     def create_protocol(self):
         self.protocol_manager.register_user_data(self.user_data)
+        self.protocol_manager.device_data = self.device_data
         self.protocol_manager.exec()
