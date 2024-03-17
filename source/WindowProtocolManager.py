@@ -35,9 +35,8 @@ class WindowProtocolManager(QtWidgets.QDialog,
         command_request = self.line_request.text().replace('/0x', '').split('/')
         command_answer = self.line_answer.text().replace('/0x', '').split('/')
 
-        # Вот здесь мы данные переводим в hex формат
-        command_request = [int(x, 16) for x in command_request]
-        command_answer = [int(x, 16) for x in command_answer]
+        print(command_request)
+        print(command_answer)
 
         if not self.check_box:  # Если чек бокс не поставлен
             if all([command_name, command_request, command_answer]):  # Если все поля заполнены
@@ -84,6 +83,8 @@ class WindowProtocolManager(QtWidgets.QDialog,
         for a in range(x):  # Добавляем строки по количеству ключей
             self.table_protocol.insertRow(a)
 
+        self.table_protocol.insertRow(1) # Добавляем ещё одну строку (на самом деле, это костыль)
+
         row = 0
         for key, value in self.command_flow.items():
             # Заполняем таблицу
@@ -93,19 +94,19 @@ class WindowProtocolManager(QtWidgets.QDialog,
             row += 1
 
     def select_row(self):
-        selected_row = self.table_protocol.currentRow()
-        print(selected_row)
+        self.selected_data = {}
         try:
-            selected_data = {}
-            for column in range(self.table_protocol.columnCount()):
-                item = self.table_protocol.item(selected_row, column)
-                selected_data[self.table_protocol.horizontalHeaderItem(column).text()] = item.text()
+            selected_row = self.table_protocol.currentItem().row()
 
-            self.selected_data = selected_data
+            data_column_1 = self.table_protocol.item(selected_row, 0).text()
+            data_column_2 = self.table_protocol.item(selected_row, 1).text()
+            data_column_3 = self.table_protocol.item(selected_row, 2).text()
+
+            self.selected_data = (data_column_1, data_column_2, data_column_3)
             print(self.selected_data)
-        except EOFError:
+        except:
             self.selected_data.clear()
-            print(EOFError)
+            print(self.selected_data)
 
     def check_box(self):
         if self.checkBox_no_answer.isChecked():
