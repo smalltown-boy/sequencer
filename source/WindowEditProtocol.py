@@ -1,11 +1,11 @@
 from PyQt6 import QtWidgets
 
-import gui.protocol as protocol_manager
+import gui.protocol as protocol_edit
 from source.database import Database
 
 
-class WindowProtocolManager(QtWidgets.QDialog,
-                            protocol_manager.Ui_diaog_protocol_redactor):  # Окно редактора протоколов
+class WindowEditProtocol(QtWidgets.QDialog,
+                            protocol_edit.Ui_diaog_protocol_redactor):  # Окно редактора протоколов
     def __init__(self, parent=None):  # Функция инициализации
         QtWidgets.QWidget.__init__(self, parent)
         self.user_data = None

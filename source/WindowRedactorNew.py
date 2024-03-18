@@ -7,6 +7,7 @@ from source.WindowAddNetSettings import WindowAddNetSettings
 from source.WindowEditCardInfo import WindowEditCardInfo
 from source.WindowEditNetInfo import WindowEditNetSettings
 from source.WindowProtocolManager import WindowProtocolManager
+from source.WindowEditProtocol import WindowEditProtocol
 from source.database import Database
 
 
@@ -27,6 +28,7 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
         self.edit_card_info = WindowEditCardInfo()
         self.edit_net_parameters = WindowEditNetSettings()
         self.protocol_manager = WindowProtocolManager()
+        self.protocol_edit = WindowEditProtocol()
         # Инициализируем кнопки
         self.btn_create.clicked.connect(self.create_new_card)  # Задаём событие создания новой карточки прибора
         self.btn_about.clicked.connect(self.about_device)  # Событие для подробного описания прибора
@@ -185,10 +187,10 @@ class WindowRedactor(QtWidgets.QDialog, redactor.Ui_redactor_second):  # Окн�
                 #
                 db.close()
                 #
-                self.protocol_manager.register_user_data(self.user_data)
-                self.protocol_manager.device_data = self.device_data
-                self.protocol_manager.command_flow = json_file
-                self.protocol_manager.update()
-                self.protocol_manager.exec()
+                self.protocol_edit.register_user_data(self.user_data)
+                self.protocol_edit.device_data = self.device_data
+                self.protocol_edit.command_flow = json_file
+                self.protocol_edit.update()
+                self.protocol_edit.exec()
             except EOFError:
                 print(EOFError)
