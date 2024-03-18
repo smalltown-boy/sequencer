@@ -75,7 +75,7 @@ class Ui_diaog_protocol_redactor(object):
 
     def retranslateUi(self, diaog_protocol_redactor):
         _translate = QtCore.QCoreApplication.translate
-        diaog_protocol_redactor.setWindowTitle(_translate("diaog_protocol_redactor", "Dialog"))
+        diaog_protocol_redactor.setWindowTitle(_translate("diaog_protocol_redactor", "Редактор протокола"))
         self.label.setText(_translate("diaog_protocol_redactor", "Введите название команды:"))
         self.label_2.setText(_translate("diaog_protocol_redactor", "Введите запрос в шестнадцатеричном формате, используя символ \"/\" в качестве разделителя:"))
         self.label_3.setText(_translate("diaog_protocol_redactor", "Введите ответ в шестнадцатеричном формате, используя символ \"/\" в качестве разделителя:"))
