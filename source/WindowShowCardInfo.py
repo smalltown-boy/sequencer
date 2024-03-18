@@ -3,6 +3,7 @@ from PyQt6.QtWidgets import QPlainTextEdit
 import gui.show_card_info as card_info
 
 from source.WindowShowNetSettings import WindowShowNetSettings
+from source.WindowViewProtocol import WindowViewProtocol
 
 
 class WindowShowCardInfo(QtWidgets.QDialog, card_info.Ui_dialog_show_card):
@@ -25,8 +26,17 @@ class WindowShowCardInfo(QtWidgets.QDialog, card_info.Ui_dialog_show_card):
         self.btn_show_protocol.clicked.connect(self.show_protocol)
         # Инициализируем формы
         self.net_info = WindowShowNetSettings()
+        self.protocol_info = WindowViewProtocol()
         # Переменная для хранения данных
         self.device_data = None
+
+    def show_net_settings(self):
+        self.net_info.show_info(self.device_data)
+        self.net_info.exec()
+
+    def show_protocol(self):
+        self.protocol_info.show_data(self.device_data)
+        self.protocol_info.exec()
 
     def show_info(self, data):
         try:
@@ -56,14 +66,5 @@ class WindowShowCardInfo(QtWidgets.QDialog, card_info.Ui_dialog_show_card):
         except:
             print("Ошибка")
 
-    def show_net_settings(self):
-        self.net_info.show_info(self.device_data)
-        self.net_info.exec()
-
-    def show_protocol(self):
-        pass
-
     def exit(self):
         self.close()
-
-
