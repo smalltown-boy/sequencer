@@ -2,6 +2,7 @@ from PyQt6 import QtWidgets
 
 import gui.sequencer_main as main_window
 from source.WindowRedactorNew import WindowRedactor
+from source.database import Database
 
 
 class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
@@ -15,6 +16,12 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
         self.menu_redactor.triggered.connect(self.open_redactor)  # Кнопка открытия редактора
         self.menu_settings.triggered.connect(self.open_settings)  # Кнопка открытия настроек
         self.menu_search.triggered.connect(self.open_search)  # Кнопка открытия поиска
+        # Кнопки управления
+        self.btn_add_device.clicked.connect(self.add_device) # Кнопка добавления команды
+        self.btn_add_command.clicked.connect(self.add_command) # Кнопка добавления команды
+        self.btn_clear_table.clicked.connect(self.clear_table) # Кнопка очистки таблицы
+        # Переменная базы данных
+        self.db = None
 
     def register_user_data(self, user_data):  # Сохраняем данные о пользователе
         self.user_data = user_data  # Получаем данные пользователя
@@ -33,3 +40,18 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
     def open_search(self):
         print("Открываем поиск.")
         pass
+
+    def add_device(self):
+        pass
+
+    def add_command(self):
+        pass
+
+    def clear_table(self):
+        pass
+
+    def init_sequencer(self):
+        self.db = Database() # Инициализируем базу данных
+        self.db.open('database/users.db')  # Открываем базу данных
+        database = self.db.read_all_data('devices') # Читаем полностью таблицу 'devices'
+
