@@ -22,6 +22,12 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
         self.btn_clear_table.clicked.connect(self.clear_table) # Кнопка очистки таблицы
         # Переменная базы данных
         self.db = None
+        # Прочие необходимые переменные
+        self.list_of_devices = []
+        self.database = None
+        # Функция инициализации секвенсора
+        self.init_sequencer()
+
 
     def register_user_data(self, user_data):  # Сохраняем данные о пользователе
         self.user_data = user_data  # Получаем данные пользователя
@@ -53,5 +59,10 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
     def init_sequencer(self):
         self.db = Database() # Инициализируем базу данных
         self.db.open('database/users.db')  # Открываем базу данных
-        database = self.db.read_all_data('devices') # Читаем полностью таблицу 'devices'
-
+        self.database = self.db.read_all_data('devices') # Читаем полностью таблицу 'devices'
+        # Собираем имена приборов для списка девайсов
+        for i in self.database:
+            self.list_of_devices.append(i['device_name'])
+        # Соединаем получанный список с комбобоксом
+        self.box_select_device.addItems(self.list_of_devices)
+        self.db.close()
