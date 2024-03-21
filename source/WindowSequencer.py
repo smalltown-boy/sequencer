@@ -17,17 +17,22 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
         self.menu_settings.triggered.connect(self.open_settings)  # Кнопка открытия настроек
         self.menu_search.triggered.connect(self.open_search)  # Кнопка открытия поиска
         # Кнопки управления
-        self.btn_add_device.clicked.connect(self.add_device) # Кнопка добавления команды
-        self.btn_add_command.clicked.connect(self.add_command) # Кнопка добавления команды
-        self.btn_clear_table.clicked.connect(self.clear_table) # Кнопка очистки таблицы
+        self.btn_add_device.clicked.connect(self.add_device)  # Кнопка добавления команды
+        self.btn_add_command.clicked.connect(self.add_command)  # Кнопка добавления команды
+        self.btn_clear_table.clicked.connect(self.clear_table)  # Кнопка очистки таблицы
         # Переменная базы данных
         self.db = None
         # Прочие необходимые переменные
         self.list_of_devices = []
         self.database = None
+        self.row = 0
         # Функция инициализации секвенсора
-        self.init_sequencer()
-
+        self.init_list_device()
+        # Настраиваем режим выбора строк
+        self.list_device.selectionModel().selectionChanged.connect(self.select_row)
+        # Настраиваем заголовки таблиц
+        self.list_device.setHorizontalHeaderLabels(["Приборы"])
+        self.list_command.setHorizontalHeaderLabels(["Команды"])
 
     def register_user_data(self, user_data):  # Сохраняем данные о пользователе
         self.user_data = user_data  # Получаем данные пользователя
@@ -48,7 +53,12 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
         pass
 
     def add_device(self):
-        pass
+        current_device = self.box_select_device.currentText()
+        self.list_device.insertRow(self.row)
+        self.list_device.setItem(self.row, 0, QtWidgets.QTableWidgetItem(str(current_device)))
+        self.row += 1
+        print(current_device)
+        print(self.row)
 
     def add_command(self):
         pass
@@ -56,13 +66,19 @@ class WindowMain(QtWidgets.QMainWindow, main_window.Ui_Sequencer):
     def clear_table(self):
         pass
 
-    def init_sequencer(self):
-        self.db = Database() # Инициализируем базу данных
+    def init_list_device(self):
+        self.db = Database()  # Инициализируем базу данных
         self.db.open('database/users.db')  # Открываем базу данных
-        self.database = self.db.read_all_data('devices') # Читаем полностью таблицу 'devices'
+        self.database = self.db.read_all_data('devices')  # Читаем полностью таблицу 'devices'
         # Собираем имена приборов для списка девайсов
         for i in self.database:
             self.list_of_devices.append(i['device_name'])
         # Соединаем получанный список с комбобоксом
         self.box_select_device.addItems(self.list_of_devices)
         self.db.close()
+
+    def init_list_command(self, device):
+        pass
+
+    def select_row(self):
+        pass
